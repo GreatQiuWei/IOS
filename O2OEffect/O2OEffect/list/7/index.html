@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+	<title>可口可乐-惊喜摇一摇</title>
+	<style>
+	*{margin:0;padding:0;}
+	html,body{height:100%;overflow:hidden;}
+	.cola,
+	.cola>*{position:absolute;bottom:0;left:50%;margin-left:-50%;width:100%;height:100%;background-position:center bottom;background-repeat:no-repeat;background-size:100% auto;opacity:0;overflow:hidden;}
+
+	.cola{background-image:url(img/bg00.png);opacity:1;
+		/*-webkit-perspective:150;*/
+		/*-webkit-perspective-origin: 50% 100%;*/
+	}
+	.page0{background-image:url(img/bg01.png);}
+	.guan1{background-image:url(img/guan.png);}
+
+	.font1>i{
+		position:absolute;bottom:10%;left:25%;width:50%;height:100%;
+		background:url(img/biao01.png) no-repeat center center;background-size:100% auto;
+	}
+	.font2>i{
+		position:absolute;bottom:10%;left:25%;width:50%;height:100%;
+		background:url(img/biao02.png) no-repeat center center;background-size:100% auto;
+	}
+	.font3>i{
+		position:absolute;bottom:10%;left:25%;width:50%;height:100%;
+		background:url(img/biao02.png) no-repeat center center;background-size:100% auto;
+	}
+	.font4>i{
+		position:absolute;bottom:20%;left:15%;width:70%;height:100%;
+		background:url(img/biao04.png) no-repeat center center;background-size:100% auto;
+	}
+	
+	/*气体1*/
+	.qi1>i,
+	.qi2>i,
+	.qi3>i{
+		position:absolute;bottom:10%;width:30%;height:100%;
+		background:no-repeat center center;background-size:100% auto;
+	}
+	.qi1>i.i0,
+	.qi2>i.i0,
+	.qi3>i.i0{
+		left:-5%;
+		background-image:url(img/qi0.png);
+	}
+	.qi1>i.i1,
+	.qi2>i.i1,
+	.qi3>i.i1{
+		right:-5%;
+		background-image:url(img/qi1.png);
+	}
+	
+	.bing1{
+		background-image:url(img/bing0.png);
+	}
+
+	.bing2{
+		background-image:url(img/bing1.png);
+	}
+
+	.guan2{
+		background-image:url(img/guan1.png);
+	}
+	.guan2>i{
+		position:absolute;bottom:0;width:100%;height:100%;
+		background:url(img/guan1_1.png) no-repeat center bottom;background-size:100% auto;
+	}
+	.gai{
+		background-image:url(img/gai.png);
+	}
+	.guan3{
+		background-image:url(img/guan2.png);
+	}
+
+	.btn{
+		position:absolute;top:40%;left:60%;margin:0;width:100px;height:60px;overflow:visible;
+	}
+	.btn>a{
+		display:block;width:100px;height:60px;
+		background:url(img/btn.png) no-repeat center bottom;background-size:100% auto;
+	}
+
+
+
+	.cola.animate0 .page0{
+		-webkit-animation:fadeOut 0.3s linear 0.6s 1;
+		-webkit-animation-fill-mode:forwards;
+		opacity:1;
+	}
+	.cola.animate0 .guan1{
+		-webkit-animation:ani_0_1 0.6s linear 1s 1;
+		-webkit-animation-fill-mode:forwards;
+		opacity:0;-webkit-transform:scale(0.1) translateY(100%);
+	}
+	/*字1动画1，小到大*/
+	.cola.animate0 .font1{
+		-webkit-animation:ani_0_2 0.5s linear 1.6s 1;
+		-webkit-animation-fill-mode:forwards;
+		opacity:0;-webkit-transform:scale(0.2) translateY(50%);
+	}
+	/*字1动画2，循环摇晃*/
+	.cola.animate0 .font1>i{
+		-webkit-animation:ani_0_2_0 1.2s linear 2.4s infinite;
+		-webkit-animation-fill-mode:both;
+		opacity:1;-webkit-transform:rotateZ(10deg);
+	}
+	/*气体1，大小循环变化*/
+	.cola.animate0 .qi1{
+		-webkit-animation:ani_0_3 1.6s linear 2.2s infinite;
+		-webkit-animation-fill-mode:both;
+		opacity:1;-webkit-transform:scale(0.9);
+	}
+	/*气体1，透明度变化*/
+	.cola.animate0 .qi1>i{
+		-webkit-animation:fadeIn 0.4s linear 2s 1;
+		-webkit-animation-fill-mode:forwards;
+		opacity:0;
+	}
+
+	/*瓶子*/
+	@-webkit-keyframes ani_0_1{
+		0% {opacity:0;-webkit-transform:scale(0.5) translateY(100%);}
+		60% {opacity:1;-webkit-transform:scale(1) translateY(10%);}
+		80% {opacity:1;-webkit-transform:scale(1.2) translateY(-5%);}
+		100%{opacity:1;-webkit-transform:scale(1) translateY(0);}
+	}
+	/*字1动画1，小到大*/
+	@-webkit-keyframes ani_0_2{
+		0% {opacity:0;-webkit-transform:scale(0.2) translateY(50%);}
+		20% {opacity:0;}
+		70%{opacity:0.4;-webkit-transform:scale(1.1) translateY(-10%);}
+		100%{opacity:1;-webkit-transform:scale(1) translateY(0%);}
+	}
+	/*字1动画2，循环摇晃*/
+	@-webkit-keyframes ani_0_2_0{
+		0% {-webkit-transform:rotateZ(10deg);}
+		14% {-webkit-transform:rotateZ(-5deg);}
+		42% {-webkit-transform:rotateZ(25deg);}
+		70% {-webkit-transform:rotateZ(-5deg);}
+		84% {-webkit-transform:rotateZ(10deg);}
+		100%{-webkit-transform:rotateZ(10deg);}
+	}
+	/*气体1，放大缩小*/
+	@-webkit-keyframes ani_0_3{
+		0% {opacity:1;-webkit-transform:scale(0.9);}
+		20%{opacity:0.8;-webkit-transform:scale(1);}
+		40%{opacity:1;-webkit-transform:scale(0.9);}
+		60%{opacity:0.8;-webkit-transform:scale(1);}
+		80%{opacity:1;-webkit-transform:scale(0.9);}
+		100%{opacity:1;-webkit-transform:scale(0.9);}
+	}
+
+
+
+	/*之前的气体消失*/
+	.cola.animate1 .qi1{
+		-webkit-animation:fadeOut 0.3s linear 0s 1;
+		-webkit-animation-fill-mode:forwards;
+		opacity:1;
+	}
+	/*字1，大到小*/
+	.cola.animate1 .font1{
+		-webkit-animation:ani_1_0 0.3s linear 0.3s 1;
+		-webkit-animation-fill-mode:forwards;
+		opacity:1;-webkit-transform:scale(1) translateY(0%);
+	}
+	/*字2动画1，小到大*/
+	.cola.animate1 .font2{
+		-webkit-animation:ani_0_2 0.5s linear 0.6s 1;
+		-webkit-animation-fill-mode:forwards;
+		opacity:0;-webkit-transform:scale(0.2) translateY(100%);
+	}
+	/*字2动画2，循环摇晃*/
+	.cola.animate1 .font2>i{
+		-webkit-animation:ani_0_2_0 1.2s linear 1.1s infinite;
+		-webkit-animation-fill-mode:both;
+		opacity:1;-webkit-transform:rotateZ(10deg);
+	}
+	/*气体2，大小循环变化*/
+	.cola.animate1 .qi2{
+		-webkit-animation:ani_0_3 1.6s linear 0.8s infinite;
+		-webkit-animation-fill-mode:both;
+		opacity:1;-webkit-transform:scale(0.9);
+	}
+	/*气体2，透明度变化*/
+	.cola.animate1 .qi2>i{
+		-webkit-animation:fadeIn 0.4s linear 0.6s 1;
+		-webkit-animation-fill-mode:forwards;
+		opacity:0;
+	}
+	/*冰1*/
+	.cola.animate1 .bing1{
+		-webkit-animation:fadeIn 1.4s linear 0.4s 1;
+		-webkit-animation-fill-mode:forwards;
+		opacity:0;
+	}
+
+
+	/*字，从大到小*/
+	@-webkit-keyframes ani_1_0{
+		0% {opacity:1;-webkit-transform:scale(1) translateY(0%);}
+		100%{opacity:0;-webkit-transform:scale(0.1) translateY(30%);}
+	}
+
+
+
+
+
+	/*之前的气体消失*/
+	.cola.animate2 .qi2{
+		-webkit-animation:fadeOut 0.3s linear 0s 1;
+		-webkit-animation-fill-mode:forwards;
+		opacity:1;
+	}
+	/*冰1，透明度变化，消失*/
+	.cola.animate2 .bing1{
+		-webkit-animation:fadeOut 1.4s linear 0.3s 1;
+		-webkit-animation-fill-mode:forwards;
+		opacity:1;
+	}
+	/*字1，大到小*/
+	.cola.animate2 .font2{
+		-webkit-animation:ani_1_0 0.3s linear 0.3s 1;
+		-webkit-animation-fill-mode:forwards;
+		opacity:1;-webkit-transform:scale(1) translateY(0%);
+	}
+	/*字3，小到大*/
+	.cola.animate2 .font3{
+		-webkit-animation:ani_0_2 0.5s linear 0.6s 1;
+		-webkit-animation-fill-mode:forwards;
+		opacity:0;-webkit-transform:scale(0.2) translateY(100%);
+	}
+	/*字3，循环摇晃*/
+	.cola.animate2 .font3>i{
+		-webkit-animation:ani_0_2_0 1.2s linear 1.1s infinite;
+		-webkit-animation-fill-mode:both;
+		opacity:1;-webkit-transform:rotateZ(10deg);
+	}
+	/*气体3，大小循环变化*/
+	.cola.animate2 .qi3{
+		-webkit-animation:ani_0_3 1.6s linear 0.8s infinite;
+		-webkit-animation-fill-mode:both;
+		opacity:1;-webkit-transform:scale(0.9);
+	}
+	/*气体3，透明度变化*/
+	.cola.animate2 .qi3>i{
+		-webkit-animation:fadeIn 0.4s linear 0.6s 1;
+		-webkit-animation-fill-mode:forwards;
+		opacity:0;
+	}
+	/*冰2*/
+	.cola.animate2 .bing2{
+		-webkit-animation:fadeIn 1.4s linear 0.4s 1;
+		-webkit-animation-fill-mode:forwards;
+		opacity:0;
+	}
+
+
+	@-webkit-keyframes fadeOut{
+		0% {opacity:1;}
+		100%{opacity:0;}
+	}
+	@-webkit-keyframes fadeIn{
+		0% {opacity:0;}
+		100%{opacity:1;}
+	}
+
+
+	/*消失*/
+	.cola.animate3 .font3,
+	.cola.animate3 .qi3{
+		-webkit-animation:fadeOut 0.3s linear 0.1s 1;
+		-webkit-animation-fill-mode:forwards;
+	}
+	.cola.animate3 .guan1,
+	.cola.animate3 .bing2{
+		-webkit-animation:shanOut 0.4s linear 0s 1;
+		-webkit-animation-fill-mode:forwards;
+		opacity:1;
+	}
+	/*覆盖了冰块的可乐瓶*/
+	.cola.animate3 .guan2{
+		-webkit-animation:shanIn 0.6s linear 0.4s 1;
+		-webkit-animation-fill-mode:forwards;
+		opacity:0;-webkit-transform:scale(0.5) translateY(100%);
+	}
+	/*覆盖了冰块的可乐瓶的白色遮罩层*/
+	.cola.animate3 .guan2>i{
+		-webkit-animation:fadeOut 0.4s linear 0.8s 1;
+		-webkit-animation-fill-mode:forwards;
+		opacity:1;
+	}
+	/*瓶盖*/
+	.cola.animate3 .gai{
+		-webkit-animation:shanIn1 1s linear 1.4s 1;
+		-webkit-animation-fill-mode:forwards;
+		opacity:0;-webkit-transform:scale(0.5) translateY(100%);
+	}
+	@-webkit-keyframes shanOut{
+		0% {opacity:1;-webkit-transform:scale(1) translateY(0%);}
+		30% {-webkit-transform:scale(1.1) translateY(-5%);}
+		70% {opacity:0;-webkit-transform:scale(0.2) translateY(100%);}
+		100%{opacity:0;-webkit-transform:scale(0.2) translateY(100%);}
+	}
+	@-webkit-keyframes shanIn{
+		0% {opacity:0;-webkit-transform:scale(0.5) translateY(100%);}
+		60% {-webkit-transform:scale(1) translateY(10%);}
+		80% {opacity:1;-webkit-transform:scale(1.2) translateY(-5%);}
+		100%{opacity:1;-webkit-transform:scale(1) translateY(0);}
+	}
+	/*瓶盖*/
+	@-webkit-keyframes shanIn1{
+		0% {opacity:0;-webkit-transform:scale(0.1) translateY(10%);}
+		20% {-webkit-transform:scale(1) translateY(0);}
+		40% {opacity:1;-webkit-transform:scale(0.9) translateY(2%);}
+		50%{opacity:1;-webkit-transform:scale(1) translateY(0);}
+		60% {opacity:1;-webkit-transform:scale(1.1) translateY(0);}
+		80%{opacity:1;-webkit-transform:scale(1) translateY(0);}
+		100%{opacity:1;-webkit-transform:scale(1) translateY(0);}
+	}
+
+
+
+	/*覆盖了冰块的可乐瓶*/
+	.cola.animate4 .guan2{
+		-webkit-animation:shanOut 0.4s linear 0.4s 1;
+		-webkit-animation-fill-mode:forwards;
+		opacity:1;-webkit-transform:scale(1) translateY(0);
+	}
+	.cola.animate4 .guan2>i{
+		opacity:0;
+	}
+	/*瓶盖*/
+	.cola.animate4 .gai{
+		-webkit-animation:shanOut 0.4s linear 0.4s 1;
+		-webkit-animation-fill-mode:forwards;
+		opacity:1;-webkit-transform:scale(1) translateY(0);
+	}
+	/*可乐溢出的瓶子*/
+	.cola.animate4 .guan3{
+		-webkit-animation:ani_0_1 0.6s linear 0.3s 1;
+		-webkit-animation-fill-mode:forwards;
+		opacity:0;-webkit-transform:scale(0.2) translateY(100%);
+	}
+	/*字4*/
+	.cola.animate4 .font4{
+		-webkit-animation:ani_0_2 0.5s linear 0.8s 1;
+		-webkit-animation-fill-mode:forwards;
+		opacity:0;-webkit-transform:scale(0.2) translateY(50%);
+	}
+	/*字4*/
+	.cola.animate4 .font4>i{
+		-webkit-animation:ani_0_2_0 1.2s linear 1.4s infinite;
+		-webkit-animation-fill-mode:both;
+		opacity:1;-webkit-transform:rotateZ(10deg);
+	}
+	/*按钮*/
+	.cola.animate4 .btn{
+		-webkit-animation:scaleIn 0.4s linear 1.4s 1;
+		-webkit-animation-fill-mode:forwards;
+		opacity:0;-webkit-transform:scale(10);
+	}
+	.cola.animate4 .btn>a{
+		-webkit-animation:ani_scale 1s linear 1.8s infinite;
+		-webkit-animation-fill-mode:forwards;
+		-webkit-transform:scale(1);
+	}
+	@-webkit-keyframes scaleIn{
+		0%{opacity:0;-webkit-transform:scale(10);}
+		100%{opacity:1;-webkit-transform:scale(1);}
+	}
+	@-webkit-keyframes ani_scale{
+		0%{-webkit-transform:scale(1);}
+		20%{-webkit-transform:scale(1.1);}
+		40%{-webkit-transform:scale(1);}
+		60%{-webkit-transform:scale(1.1);}
+		80%{-webkit-transform:scale(1);}
+		100%{-webkit-transform:scale(1);}
+	}
+
+
+
+
+
+	.cola.animate1 .guan1,
+	.cola.animate2 .guan1{opacity:1;}
+/*	.cola.animate2 .bing1,
+	.cola.animate3 .bing1,
+	.cola.animate4 .bing1,
+	.cola.animate2 .bing2,
+	.cola.animate3 .bing2,
+	.cola.animate4 .bing2{opacity:1;}*/
+
+	.cola.animate4 .page0,
+	.cola.animate4 .guan1,
+	.cola.animate4 .qi1,
+	.cola.animate4 .font1,
+	.cola.animate4 .qi2,
+	.cola.animate4 .font2,
+	.cola.animate4 .bing1,
+	.cola.animate4 .qi3,
+	.cola.animate4 .font3,
+	.cola.animate4 .bing2/*,
+	.cola.animate4 .guan2,
+	.cola.animate4 .gai*/{display:none;}
+
+
+	.loadingbox{position:fixed;top:0;bottom:0;right:0;left:0;z-index:100;background:rgba(0,0,0,0.8);}
+	.loadingbox i{
+		width:30px;height:30px;position:absolute;top:50%;left:50%;z-index:101;
+		margin:-17px 0 0 -17px;
+		border:4px solid #FFF;border-radius:30px;
+		border-color:transparent transparent #FFF #FFF;
+		-webkit-animation: loading 1.2s linear infinite;
+		animation: loading 1.2s linear infinite;
+	}
+
+	@-webkit-keyframes loading {
+		0% {
+			-webkit-transform: rotateZ(0);
+			transform: rotateZ(0);
+		}
+		100% {
+			-webkit-transform: rotateZ(360deg);
+			transform: rotateZ(360deg);
+		}
+	}
+	</style>
+</head>
+<body>
+	<div id="cola" class="cola">
+		<!-- <div class="page0"></div> -->
+		<div class="guan1"></div><!-- 可乐瓶 -->
+		<div class="qi1"><i class="i0"></i><i class="i1"></i></div><!-- 气体1 -->
+		<div class="font1"><i></i></div><!-- 字体1 -->
+
+		<div class="qi2"><i class="i0"></i><i class="i1"></i></div><!-- 气体2 -->
+		<div class="font2"><i></i></div><!-- 字体2 -->
+		<div class="bing1"></div><!-- 冰1 -->
+
+		<div class="qi3"><i class="i0"></i><i class="i1"></i></div><!-- 气体3 -->
+		<div class="font3"><i></i></div><!-- 字体3 -->
+		<div class="bing2"></div><!-- 冰2 -->
+
+		<div class="guan2"><i></i></div><!-- 可乐瓶2 -->
+		<div class="gai"></div><!-- 瓶盖 -->
+
+		<div class="guan3"></div>
+		<div class="font4"><i></i></div><!-- 字体4 -->
+		<div class="btn"><a href="http://www.icoke.cn"></a></div>
+
+
+	</div>
+
+	<div class="loadingbox"><i></i></div>
+	<script>
+
+
+	var SHAKE_THRESHOLD = 1200;
+	var last_update = 0;
+	var x, y, z, last_x, last_y, last_z;
+	var num=0;
+	function devicemotion(e) {
+		var acceleration =e.accelerationIncludingGravity;
+		var curTime = new Date().getTime();
+		if ((curTime - last_update)> 100) {
+			var diffTime = curTime -last_update;
+			last_update = curTime;
+			x = acceleration.x;
+			y = acceleration.y;
+			z = acceleration.z;
+			var speed = Math.abs((x +y + z) - (last_x+last_y+last_z)) / diffTime * 10000;
+
+			if (speed > SHAKE_THRESHOLD) {
+				num++;
+				check();
+			}
+			last_x = x;
+			last_y = y;
+			last_z = z;
+		}
+	 
+	}
+	var isCompleted=false;
+	function check(){
+		if (isCompleted) {return};
+		var n=Math.floor(num/2);
+		if(n>=2){
+			changeClass(3);
+			isCompleted=true;
+			setTimeout(function(){changeClass(4)},3000);
+		}else if(n>=2){
+			changeClass(2);
+		}else if(n>=1){
+			changeClass(1);
+		};
+		
+	}
+	function changeClass(n){
+		document.querySelector('#cola').className='cola animate'+n;
+	}
+
+	
+				window.addEventListener('devicemotion', devicemotion, false);
+				document.querySelector('.loadingbox').style.display="none";
+				changeClass(0);
+
+
+	</script>
+</body>
+</html>

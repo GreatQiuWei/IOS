@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6245" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="center" id="iN0-l3-epB" customClass="O2OAdForm1">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="jiqi.png" translatesAutoresizingMaskIntoConstraints="NO" id="LuY-tL-JJD">
+                    <rect key="frame" x="40" y="40" width="520" height="460"/>
+                </imageView>
+                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="03pic01.png" translatesAutoresizingMaskIntoConstraints="NO" id="Y88-b6-YVb">
+                    <rect key="frame" x="40" y="388" width="520" height="37"/>
+                    <variation key="heightClass=compact" ambiguous="YES" misplaced="YES">
+                        <rect key="frame" x="217" y="313" width="166" height="37"/>
+                    </variation>
+                </imageView>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="LuY-tL-JJD" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="40" id="CHx-iK-LOb"/>
+                <constraint firstAttribute="bottom" secondItem="Y88-b6-YVb" secondAttribute="bottom" constant="175" id="JBf-Am-52c"/>
+                <constraint firstAttribute="trailing" secondItem="LuY-tL-JJD" secondAttribute="trailing" constant="40" id="VR9-NG-8US"/>
+                <constraint firstAttribute="trailing" secondItem="Y88-b6-YVb" secondAttribute="trailing" constant="40" id="aJF-tG-Cth"/>
+                <constraint firstAttribute="centerX" secondItem="Y88-b6-YVb" secondAttribute="centerX" id="j4I-d8-Oyn"/>
+                <constraint firstAttribute="bottom" secondItem="LuY-tL-JJD" secondAttribute="bottom" constant="100" id="nef-Vh-O09"/>
+                <constraint firstItem="LuY-tL-JJD" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="40" id="svD-A2-D9F"/>
+                <constraint firstItem="Y88-b6-YVb" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="40" id="zzX-C1-3sF"/>
+            </constraints>
+            <connections>
+                <outlet property="pic01View" destination="Y88-b6-YVb" id="8lW-gs-LlM"/>
+            </connections>
+        </view>
+    </objects>
+    <resources>
+        <image name="03pic01.png" width="166" height="37"/>
+        <image name="jiqi.png" width="210" height="441"/>
+    </resources>
+</document>

@@ -1,0 +1,809 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta id="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link rel="stylesheet" href="css/global.css" />
+<script src="js/zepto.min.js"></script>
+<script src="js/zepto.touch.js"></script>
+
+<title>美的空调 - 低碳大作战</title>
+
+</head>
+
+<body>
+<div id="LandscapeNotice"></div>
+
+<audio id="MgameWin" volume="1" autoplay="autoplay" ><source src="music/gameWin.mp3" type="audio/mpeg" /></audio>
+<audio id="MpopBom" volume="1" autoplay="autoplay" ><source src="music/popBom.mp3" type="audio/mpeg" /></audio>
+<audio id="MpopDestroy" volume="1" autoplay="autoplay" ><source src="music/popDestroy.mp3" type="audio/mpeg" /></audio>
+<audio id="Mrebound" volume="1" autoplay="autoplay" ><source src="music/rebound.mp3" type="audio/mpeg" /></audio>
+<audio id="MbgMusic" volume="1" autoplay="autoplay" loop="loop" ><source src="music/bgMusic.mp3" type="audio/mpeg" /></audio>
+
+<div id="loading" class="page">
+	<div class="center fs14">
+		<span>正在加载...</span>
+		<span style="margin-left:1rem;" class="loadStatus">0</span>
+		<span>%</span>
+	</div>
+</div>
+
+<div id="message">
+	<div class="bg"></div>
+	<div class="panel">
+		<div class="text"></div>
+		<a href="javascript:game.restart();" class="tdn"><div class="btn">重新游戏</div></a>
+		<!-- <a href="javascript:game.closeMsg();"><div class="close"></div></a> -->
+	</div>
+	<div class="start"></div>
+</div>
+
+<div id="pageIndex" class="page">
+	<header class="gameHeader">
+		<i class="timeIcon f_l"></i>
+		<div class="timeBar f_l">
+			<div class="timeStatus"></div>
+		</div>
+		<div class="btns f_r">
+			<i class="b1"></i>
+			<i class="b2"></i>
+			<i class="b3"></i>
+		</div>
+	</header>
+
+	<section class="gameArea">
+		<div class="pops">
+			<!-- inner pops -->
+		</div>
+		<div class="movePop">
+			<!-- inner pop -->
+		</div>
+		<div class="moveBar"></div>
+		<div class="popDestroy"></div>
+		<div class="gameStartMask"><div class="tip opacity">请轻触屏幕开始游戏</div></div>
+	</section>
+
+	<div id="test" style="position:fixed;right: 0;top: 10px; color:#ff0000;"></div>
+</div>
+
+<div id="pageList" class="page">
+	<div class="winner-title lineBg-blue">
+		<span>中奖名单</span>
+		<a href="javascript:game.showPageIndex();"><svg width="44" height="44" style="position:absolute;left:0;top:0;">
+				<line x1="29" y1="11" x2="15" y2="22" style="stroke:rgb(255,255,255);stroke-width:2"/>
+				<line x1="15" y1="22" x2="29" y2="33" style="stroke:rgb(255,255,255);stroke-width:2"/>
+			</svg></a>
+	</div>
+	<ul class="winner-list">
+		<!-- <li>恭喜<span class="phone">150****1759</span>获得<span class="gift">神秘礼品</span></li> -->
+	</ul>
+</div>
+
+<div id="pageInfo" class="page">
+	<section>
+		<header class="lineBg-blue">
+			<h1>恭喜你！</h1>
+			<h2>获得<span class="giftNo">gift</span>，完善领奖信息打开礼品看看~</h2>
+		</header>
+		<div class="arrow lineBg-blue"></div>
+		<div class="form">
+			<div class="line">
+				<span>你的姓名：</span>
+				<input type="text" class="name" id="name" placeholder="">
+				<span class="sex male act">男<i></i></span>
+				<span class="sex female">女<i></i></span>
+			</div>
+			<div class="line">
+				<span>你的手机：</span>
+				<input type="text" class="phone" id="phone" placeholder="">
+			</div>
+		</div>
+		<div class="sentBtn lineBg-blue">发送</div>
+	</section>
+</div>
+
+<script>
+
+$(document).ready(function(){
+	var game={};
+	/* 获取浏览器信息 */
+	var ua = navigator.userAgent.toLowerCase();
+	var windowW=$(window).width();
+	var windowH=$(window).height();
+	var defaultW=360;
+	var gameHeaderSize={ x:360 , y:55 };
+	var gameHeaderTimeSize={ x:50 , y:20 };
+	var gameHeaderTimeBarSize={ x:140 , y:14 };
+	var gameHeaderBtnSize={ x:36 , y:36 };
+	var spriteSize={ x:315 , y:81 };
+	var popSpriteSize={ x:495 , y:45 };
+	var popSize={ x:45 , y:45 };
+	var moveBar={ x:310 , y:27 }; //220 18
+	var gameScale=windowW/defaultW;
+	var gameAreaSize={ x:windowW , y:windowH-gameHeaderSize.y*gameScale };
+	var movePopDefaultPoint={ x:(windowW-popSize.x*gameScale)*0.5 , y:gameAreaSize.y-50-moveBar.y*gameScale-popSize.y*gameScale };
+	
+	var $gameHeader=$('.gameHeader');
+	var $gameArea=$('.gameArea');
+	var $timeIcon=$('.gameHeader .timeIcon');
+	var $btns=$('.gameHeader .btns>i');
+	var $timeBar=$('.timeBar');
+	var $timeStatus=$('.timeStatus');
+	var $moveBar=$('.moveBar');
+	var $movePop=$('.movePop');
+	var $popDestroy=$('.popDestroy');
+	var $listBtn=$('.b1');
+	var $replayBtn=$('.b2');
+	var $pasBtn=$('.b3');
+	var $gameStartMask=$('.gameStartMask');
+
+	var movePopPoint={ x:movePopDefaultPoint.x , y:movePopDefaultPoint.y };
+	var pops,popLine;
+	var gmaeFps=1000/60;
+	var movePopSpeed=ua.indexOf("mac")>=0?3:6;//3
+	var movePopDirection={ x:1 , y:-1 };
+	var moveBarSpeed=5;
+	var popObjs=[];
+	var gameSetTimeOut=1000*60*1.5;
+	var gameTimer=gameSetTimeOut;
+	var popCount=0;
+	var moveBarX=0;
+	var MgameWin,MpopBom,MpopDestroy,Mrebound;
+
+	var $message=$('#message');
+	var $messageBg=$('#message .bg');
+	var $messagePanel=$('#message .panel');
+	var $messageBtn=$('#message .panel .btn');
+	var $messageText=$('#message .panel .text');
+	var $messageClose=$('#message .panel .close');
+	var $messageStart=$('#message .start');
+	var $loading=$('#loading');
+	var $pageInfo=$('#pageInfo');
+	var $pageIndex=$('#pageIndex');
+	var $pageList=$('#pageList');
+	var $sentBtn=$('.sentBtn');
+	var $giftNo=$('.giftNo');
+	var $sex=$('.sex');
+
+	var $winnerTitle=$('.winner-title');
+	var $winnerList=$('.winner-list');
+
+	var isGameStart=false;
+	var isGameStop=true;
+	var isBackToIndex=false;
+	var gameInterval;
+	var gameHardLevel=6;
+	var giftNo=5;
+	var gift=[
+		'<b>不小心亲吻炸弹</b><br>美的变频空调，更加注重节能环保,可以轻松过滤空气中的苯气,甲醇等有害物质。',
+		'<b>时间结束</b><br>美的变频空调，更加注重节能环保,可以轻松过滤空气中的苯气,甲醇等有害物质。',
+		'<b>成功闯关</b><br>美的空调－精彩生活由我创造<br>原来生活可以更美的.<br>创新科技、美的空调',
+		'<b>发送成功</b><br>我们的工作人员，会在一周内与你联系神秘礼品两周内寄出，敬请期待！',
+		'<a href="javascript:game.setMusic();"><img src="images/start.png" width="320" height="320"></a>&nbsp;',
+		'神秘礼品一份',
+		'请输入正确姓名！',
+		'请输入正确手机号码！',
+		'<b>游戏结束</b><br>美的变频空调，更加注重节能环保,可以轻松过滤空气中的苯气,甲醇等有害物质。'
+		];
+	var sexNo=0; //0：男，1：女
+	var winnerList=[
+		['135****2468','5'],['159****1258','5'],['138****3265','5'],['156****7854','5'],['183****4521','5'],
+		['136****0258','5'],['137****1213','5'],['159****1358','5'],['155****2489','5'],['184****9874','5']
+	];
+	var winnerListStr='';
+	var regName=/^([\u4E00-\uFA29]|[\uE7C7-\uE7F3]){2,4}$/;
+	var regPhone=/^1\d{10}$/;
+
+	var resourceAry=[
+		{"id":"move_bar","url":"images/move_bar.png"},
+		{"id":"sprite","url":"images/sprite.png"},
+		{"id":"start","url":"images/start.png"},
+		{"id":"time","url":"images/time.png"},
+		{"id":"sex","url":"images/sex.png"},
+		{"id":"top_bg","url":"images/top_bg.png"},
+		{"id":"pop_sprite","url":"images/pop_sprite.png"}//,
+		// {"id":"music","url":"music/gameWin.mp3"},
+		// {"id":"music","url":"music/popBom.mp3"},
+		// {"id":"music","url":"music/popDestroy.mp3"},
+		// {"id":"music","url":"music/rebound.mp3"}
+	];
+
+	var firstTouch,deltaX = 0;
+	var touch={};
+	
+	function addMoveBarTouch(){
+		$moveBar.on('touchstart',function(e){
+			firstTouch = e.touches[0];
+			touch.x1 = firstTouch.pageX;
+			addMoveBarAct();
+			removeDevicemotion();
+		});	
+	}
+	function removeMoveBarTouch(){
+		$moveBar.off('touchstart');
+	}
+	function addMoveBarAct(){
+		$moveBar.on('touchmove',function(e){
+			firstTouch = e.touches[0];
+			touch.x2 = firstTouch.pageX;
+			deltaX=touch.x2 - touch.x1;
+			touch.x1=touch.x2;
+			moveBarX+=deltaX;
+			if(moveBarX>=(windowW-moveBar.x*gameScale)*0.5) moveBarX=(windowW-moveBar.x*gameScale)*0.5;
+			if(moveBarX+(windowW-moveBar.x*gameScale)*0.5<=0) moveBarX=-(windowW-moveBar.x*gameScale)*0.5;
+			$moveBar[0].style.webkitTransform='translate3d('+(moveBarX)+'px,0,0)';
+		});
+		$moveBar.on('touchend',function(){
+			removeMoveBarAct();
+			addDevicemotion();
+		});
+	}
+	function removeMoveBarAct(){
+		$moveBar.off('touchmove');
+		$moveBar.off('touchend');
+	}
+
+	$movePop.on('touchend',function(){
+		if(!isGameStart) game.start();
+	});
+
+	$gameStartMask.on('touchend',function(){
+		if(!isGameStart) game.start();
+	});
+
+	$listBtn.on('touchend',function(){
+		game.stop();
+		game.showPageList();
+	});
+	$replayBtn.on('touchend',function(){
+		game.restart();
+	});
+	$pasBtn.on('touchend',function(){
+		// $('#test').html(isGameStart+"+"+isGameStop);
+		if(isGameStart){
+			game.stop();
+		}else{
+			game.start();
+		}
+	});
+
+	$messageBg.on('touchend',function(){
+		game.closeMsg();
+	});
+
+	$sentBtn.on('touchend',function(){
+		game.sentInfo();
+	});
+
+	$sex.on('touchend',function(){
+		$(this).addClass('act').siblings().removeClass('act');
+		if($(this).hasClass('male')) sexNo=0;
+		if($(this).hasClass('female')) sexNo=1;
+	});
+
+	window.onresize=function(){
+		if($(window).width()>$(window).height()){
+			if(isGameStart) game.stop();
+		}
+	};
+
+	game.setMusic=function(){
+		game.closeMsg();
+		MgameWin.play();
+		MpopBom.play();
+		MpopDestroy.play();
+		Mrebound.play();
+		MbgMusic.play();
+		setTimeout(function(){
+			MgameWin.pause();
+			MpopBom.pause();
+			MpopDestroy.pause();
+			Mrebound.pause();
+		},50);
+	};
+
+	game.getWinnerList=function(){
+		$.each(winnerList,function(i,val){
+			winnerListStr+='<li>恭喜<span class="phone">'+val[0]+'</span>获得<span class="gift">'+gift[val[1]]+'</span></li>';
+		});
+		$winnerList.append(winnerListStr);
+	};
+
+	game.start=function(){
+		game.closeMsg();
+		isGameStart=true;
+		isGameStop=false;
+		// MpopDestroy.play();
+		// MpopBom.play();
+		// Mrebound.play();
+		// MgameWin.play();
+		$gameStartMask.css({width:0,height:0});
+		$pasBtn.css({backgroundPosition:-gameHeaderBtnSize.x*gameScale*3+'px 0px'});
+		addDevicemotion();
+		addMoveBarTouch();
+		gameInterval=setInterval(function(){
+			gameTimer-=gmaeFps;
+			game.timeStatus(gameTimer);
+			if(gameTimer<0) game.timeOut();
+			if(gameTimer<gameSetTimeOut*2/3) movePopSpeed=ua.indexOf("mac")>=0?4:8;
+			if(gameTimer<gameSetTimeOut*0.5){
+				movePopSpeed=ua.indexOf("mac")>=0?5:10;
+				$timeStatus.addClass('red');
+				moveBar.x=280;
+				$moveBar.css({width:moveBar.x*gameScale,height:moveBar.y*gameScale+'px'});
+				$moveBar.css({backgroundImage:'url(images/move_bar.png)',backgroundSize:moveBar.x*gameScale+'px '+moveBar.y*gameScale+'px'});
+			}
+			checkMove();
+			movePop(movePopSpeed*movePopDirection.x,movePopSpeed*movePopDirection.y);
+			if(popCount<3) game.win();
+		},gmaeFps);
+	};
+
+	game.restart=function(){
+		clearInterval(gameInterval);
+		movePopPoint={ x:movePopDefaultPoint.x , y:movePopDefaultPoint.y };
+		pops='';
+		popLine='';
+		gmaeFps=1000/60;
+		movePopSpeed=ua.indexOf("mac")>=0?3:6;
+		movePopDirection={ x:1 , y:-1 };
+		moveBarSpeed=5;
+		moveBar.x=310;
+		$moveBar.css({width:moveBar.x*gameScale,height:moveBar.y*gameScale+'px'});
+		$moveBar.css({backgroundImage:'url(images/move_bar.png)',backgroundSize:moveBar.x*gameScale+'px '+moveBar.y*gameScale+'px'});
+		popObjs=[];
+		gameTimer=gameSetTimeOut;
+		popCount=0;
+		moveBarX=0;
+		isGameStart=false;
+		isGameStop=true;
+		$gameStartMask.css({width:'100%',height:'100%'});
+		$moveBar[0].style.webkitTransform='translate3d(0,0,0)';
+		$movePop[0].style.webkitTransform='translate3d('+(movePopDefaultPoint.x)+'px,'+(movePopDefaultPoint.y)+'px,0)';
+		$timeStatus.css({width:'100%'}).removeClass('red');
+		$pasBtn.css({backgroundPosition:-gameHeaderBtnSize.x*gameScale*2+'px 0px'});
+		$('#LandscapeNotice').attr("style","");
+
+		$('.pops').html(createPops());
+		$popDestroy.html('');
+		$movePop.html(createOnePop(1,0,0,0,0));
+		removeDevicemotion();
+		removeMoveBarTouch();
+		game.closeMsg();
+	};
+
+	game.timeStatus=function(timer){
+		$timeStatus.css({width:timer/gameSetTimeOut*100+'%'});
+	};
+
+	game.timeOut=function(){
+		clearInterval(gameInterval);
+		removeDevicemotion();
+		removeMoveBarTouch();
+		game.showMsg(1,3);
+	};
+
+	game.win=function(){
+		clearInterval(gameInterval);
+		removeDevicemotion();
+		removeMoveBarTouch();
+		game.showMsg(2,4);
+		MgameWin.play();
+	};
+
+	game.stop=function(){
+		isGameStart=false;
+		isGameStop=true;
+		clearInterval(gameInterval);
+		removeDevicemotion();
+		removeMoveBarTouch();
+		$pasBtn.css({backgroundPosition:-gameHeaderBtnSize.x*gameScale*2+'px 0px'});
+	};
+
+	game.bom=function(){
+		clearInterval(gameInterval);
+		removeDevicemotion();
+		removeMoveBarTouch();
+		gameTimer*=0.5;
+		game.showMsg(0,5);
+		MpopBom.play();
+	};
+
+	game.over=function(){
+		clearInterval(gameInterval);
+		removeDevicemotion();
+		removeMoveBarTouch();
+		game.showMsg(8,3);
+	};
+
+	game.showMsg=function(i,type){
+		$messagePanel.show();
+		$messageStart.hide();
+		if(type==1){
+			$messageText.html('亲，你今天运气爆棚！<br>抽中'+gift[i]);
+			$messageBtn.show();
+		}else if(type==2){
+			$messagePanel.hide();
+			$messageStart.show();
+			$messageStart.html(gift[i]);
+		}else if(type==3){
+			$messageText.html(gift[i]);
+			$('.tdn').attr('href','javascript:game.restart();');
+			$messageBtn.removeClass('lineBg-orange lineBg-blue').addClass('lineBg-orange').html('重新游戏').show();
+		}else if(type==4){
+			$messageText.html(gift[i]);
+			$('.tdn').attr('href','javascript:game.showPageInfo();');
+			$messageBtn.removeClass('lineBg-orange lineBg-blue').addClass('lineBg-blue').html('马上领奖').show();
+		}else if(type==5){
+			$messageText.html(gift[i]);
+			$('.tdn').attr('href','javascript:game.start();');
+			$messageBtn.removeClass('lineBg-orange lineBg-blue').addClass('lineBg-blue').html('继续游戏').show();
+		}else{
+			$messageText.html(gift[i]);
+			// $messageBtn.removeClass('lineBg-orange lineBg-blue').addClass('lineBg-orange').show();
+		}
+		$message.show();
+		$messagePanel.addClass('pop');
+		$messageStart.addClass('pop');
+	};
+
+	game.closeMsg=function(){
+		game.fixedBug();
+		$messageBtn.hide();
+		$messagePanel.removeClass('pop');
+		$message.hide();
+		if(isBackToIndex){
+			game.showPageIndex();
+			isBackToIndex=false;
+		}
+	};
+
+	game.showPageInfo=function(){
+		$('#LandscapeNotice').hide();
+		$giftNo.html(gift[giftNo]);
+		$message.hide();
+		$pageIndex.hide();
+		$pageList.hide();
+		$pageInfo.show();
+	};
+
+	game.showPageIndex=function(){
+		$message.hide();
+		$pageIndex.show();
+		$pageList.hide();
+		$pageInfo.hide();
+	};
+
+	game.showPageList=function(){
+		$message.hide();
+		$pageIndex.hide();
+		$pageInfo.hide();
+		$pageList.show();
+	};
+
+	game.sentInfo=function(){
+		$messageBtn.hide();
+		var name=$('#name').val();
+		var phone=$('#phone').val();
+		if(!(regName).test(name)){
+			game.showMsg(6,0);
+		}else if(!(regPhone).test(phone)){
+			game.showMsg(7,0);
+		}else{
+			phone=phone.substring(0,3)+'****'+phone.substring(7,11);
+			var winner='<li>恭喜<span class="phone">'+phone+'</span>获得<span class="gift">'+gift[giftNo]+'</span></li>';
+			$winnerList.prepend(winner);
+			isBackToIndex=true;
+			game.showMsg(3,3);
+		}
+	};
+
+	game.loadImages=function(){
+		var total=resourceAry.length;
+        var loaded=0;
+        for(var i in resourceAry)
+        {
+            if(resourceAry[i]["url"].indexOf(".mp3")>=0){
+            	var audio=document.createElement("audio");
+            	var source=document.createElement("source");
+            	source.type='audio/mpeg';
+            	source.src=resourceAry[i]["url"];
+            	audio.autoplay='autoplay';
+            	audio.appendChild(source);
+            	document.body.appendChild(audio);
+
+	            audio.onloadeddata = function(){
+	                loaded++;
+	                console.log(loaded);
+	                $('.loadStatus').html(Math.floor(loaded/total*100));
+	                if(loaded>=total)
+	                {
+	                   game.setImage();
+	                }
+	            }
+            }else{
+            	var image= new Image();
+	            image.onload = function(){
+	                loaded++;
+	                $('.loadStatus').html(Math.floor(loaded/total*100));
+	                if(loaded>=total)
+	                {
+	                   game.setImage();
+	                }
+	            }
+	            image.src = resourceAry[i]["url"];
+            }
+        }
+	}
+
+	game.setImage=function(){
+		game.init();
+        $loading.hide();
+        $pageIndex.show();
+        game.showMsg(4,2);
+	};
+
+	game.fixedBug=function(){
+		$('#gameBtn a').attr('href','javascript:;');
+		setTimeout(function(){
+			$('#gameBtn a').attr('href','javascript:game.btn();');
+		},300);
+	};
+
+	game.btn=function(){
+		if(!isGameStart){
+			if(gameTimes>0) game.start();
+			else game.showMsg(5,0);
+		}
+	};
+
+	function checkMove(){
+		for(var i=4; i>=0; i--){
+			// if(movePopPoint.y<popSize.y*gameScale*(i+1)+10&&movePopPoint.y>=popSize.y*gameScale*(i)+10){
+				for(var j=0; j<popObjs[i].length; j++){
+					var circleCenter={ x:popObjs[i][j].x1+popSize.x*gameScale*0.5 , y:popSize.y*gameScale*(i)+10+popSize.y*gameScale*0.5 };
+					var movePopCenter={ x:movePopPoint.x+popSize.x*gameScale*0.5 , y:movePopPoint.y+popSize.y*gameScale*0.5 };
+					var r=popSize.x*gameScale*0.5;
+					if(circleCollision(movePopCenter,circleCenter,r)){
+						if(!popObjs[i][j].destroy){
+							//右下角区域
+							if(movePopCenter.x-circleCenter.x>=0&&movePopCenter.y-circleCenter.y>=0){
+								movePopDirection.x=1;
+								movePopDirection.y=1;
+							}
+							//左下角区域
+							if(movePopCenter.x-circleCenter.x<0&&movePopCenter.y-circleCenter.y>=0){
+								movePopDirection.x=-1;
+								movePopDirection.y=1;
+							}
+							//左上角区域
+							if(movePopCenter.x-circleCenter.x<0&&movePopCenter.y-circleCenter.y<0){
+								movePopDirection.x=-1;
+								movePopDirection.y=-1;
+							}
+							//右上角区域
+							if(movePopCenter.x-circleCenter.x>=0&&movePopCenter.y-circleCenter.y<0){
+								movePopDirection.x=1;
+								movePopDirection.y=-1;
+							}
+							destroyPop(popObjs[i][j].pop,i,j);
+							popObjs[i][j].destroy=1;
+							return;
+						}
+					}
+				}
+			// }
+		}
+		if(movePopPoint.x<0) movePopDirection.x=1;
+		if(movePopPoint.x>windowW-popSize.x*gameScale) movePopDirection.x=-1;
+		if(movePopPoint.y<10) movePopDirection.y=1;
+		if(movePopPoint.y>movePopDefaultPoint.y
+			&&movePopPoint.y<=movePopDefaultPoint.y+moveBar.y*gameScale
+			&&movePopPoint.x+popSize.x*gameScale*0.5>=moveBarX+(windowW-moveBar.x*gameScale)*0.5
+			&&movePopPoint.x+popSize.x*gameScale*0.5<=moveBarX+(windowW-moveBar.x*gameScale)*0.5+moveBar.x*gameScale)
+			{
+				movePopDirection.y=-1;
+				Mrebound.play();
+			}
+		if(movePopPoint.y>movePopDefaultPoint.y
+			&&movePopPoint.y<=movePopDefaultPoint.y+moveBar.y*gameScale
+			&&movePopPoint.x+popSize.x*gameScale*0.5<moveBarX+(windowW-moveBar.x*gameScale)*0.5)
+			{
+				movePopDirection.x=-1;
+				Mrebound.play();
+			}
+		if(movePopPoint.y>movePopDefaultPoint.y
+			&&movePopPoint.y<=movePopDefaultPoint.y+moveBar.y*gameScale
+			&&movePopPoint.x+popSize.x*gameScale*0.5>moveBarX+(windowW-moveBar.x*gameScale)*0.5+moveBar.x*gameScale)
+			{
+				movePopDirection.x=1;
+				Mrebound.play();
+			}
+		if(movePopPoint.y>gameAreaSize.y-popSize.y*gameScale) game.over();
+	}
+
+	function circleCollision(a,b,r){
+		var x=Math.abs(a.x-b.x);
+		var y=Math.abs(a.y-b.y);
+		var b=Math.sqrt(x*x+y*y)<=2*r?true:false;
+		return b; 
+	}
+
+	function destroyPop(rel,i,j){
+		var $pop=$('.pops>i[rel="'+rel+'"]');
+		if($pop.hasClass('bom')){
+			$pop.css({opacity:0});
+			createOneDPop(i,j);
+			game.bom();
+		}
+		else{
+			$pop.css({opacity:0});
+			popCount--;
+			createOneDPop(i,j);
+			MpopDestroy.play();
+		}
+	}
+
+	function createOneDPop(i,j){
+		var dpop;
+		var backgroundImage='url(images/pop_sprite.png)';
+		var backgroundSize=popSpriteSize.x*gameScale+'px '+popSpriteSize.y*gameScale+'px';
+		var backgroundPosition=-popSpriteSize.x*gameScale+'px 0px';
+		var width=popSize.x*gameScale+'px';
+		var height=popSize.y*gameScale+'px';
+		var left=popObjs[i][j].x1+'px';
+		var top=popSize.y*gameScale*i+'px';
+		var rel='pop'+i+''+j;
+		dpop='<i class="" rel="'+rel+'" style="background-image:'+backgroundImage+';background-size:'+backgroundSize+';background-position:'+backgroundPosition+';width:'+width+';height:'+height+';left:'+left+';top:'+top+';">&nbsp;</i>';
+		$popDestroy.append(dpop);
+		DPopAct(i,j);
+	}
+
+	function DPopAct(i,j){
+		for(var k=0; k<11 ; k++){
+			DPopActPlay(i,j,k);
+		}
+	}
+
+	function DPopActPlay(i,j,k){
+		var rel='pop'+i+''+j;
+		var $dpop=$('.popDestroy>i[rel="'+rel+'"]');
+		setTimeout(function(){
+			$dpop.css({backgroundPosition:-popSize.x*gameScale*k+'px 0px'});
+		},gmaeFps*k*3);
+	}
+
+	function createPops(){
+		pops='';
+		for(var i=0; i<5; i++){
+			pops+=createLinePops(i,8-Math.abs(Math.abs(i-2)-2));
+		}
+		return pops;
+	}
+
+	function createLinePops(i,count){
+		popLine='';
+		var objAry=[];
+		if(i==0){
+			// var popBomNum=Math.ceil(Math.random()*7);
+			var popBomNum=Math.ceil(Math.random()*2)==1?0:7;
+			for(var j=0; j<count; j++){
+				if(j==popBomNum) popLine+=createOnePop(0,0,8-count,i,j);
+				else popLine+=createOnePop(Math.ceil(Math.random()*5)+1,0,8-count,i,j);
+				objAry[j]={ x1:(8-count)*popSize.x*gameScale/2+popSize.x*gameScale*j , x2:(8-count)*popSize.x*gameScale/2+popSize.x*gameScale*(j+1) , pop:'pop'+i+''+j , destroy:0 };
+			}
+		}else{
+			for(var j=0; j<count; j++){
+				if(j==0) popLine+=createOnePop(Math.ceil(Math.random()*5)+1,1,8-count,i,j);
+				else popLine+=createOnePop(Math.ceil(Math.random()*5)+1,0,8-count,i,j);
+				objAry[j]={ x1:(8-count)*popSize.x*gameScale/2+popSize.x*gameScale*j , x2:(8-count)*popSize.x*gameScale/2+popSize.x*gameScale*(j+1) , pop:'pop'+i+''+j , destroy:0 };
+			}
+		}
+		popObjs.push(objAry);
+		return popLine;
+	}
+
+	function createOnePop(i,isFirst,count,row,column){
+		popCount++;
+		var backgroundImage='url(images/sprite.png)';
+		var backgroundSize=spriteSize.x*gameScale+'px '+spriteSize.y*gameScale+'px';
+		var backgroundPosition=-popSize.x*gameScale*i+'px '+(-gameHeaderBtnSize.y*gameScale)+'px';
+		var width=popSize.x*gameScale+'px';
+		var height=popSize.y*gameScale+'px';
+		var marginLeft=popSize.x*gameScale*count/2+'px';
+		var pop;
+		var random=Math.floor(Math.random()*2);
+		var rel='pop'+row+''+column;
+		var className='act animation-delay-'+random;
+		if(i==0) className+=' bom';
+		if(isFirst) pop='<i class="'+className+'" rel="'+rel+'" style="background-image:'+backgroundImage+';background-size:'+backgroundSize+';background-position:'+backgroundPosition+';width:'+width+';height:'+height+';margin-left:'+marginLeft+';">&nbsp;</i>';
+		else pop='<i class="'+className+'" rel="'+rel+'" style="background-image:'+backgroundImage+';background-size:'+backgroundSize+';background-position:'+backgroundPosition+';width:'+width+';height:'+height+';">&nbsp;</i>';
+		return pop;
+	}
+
+	function movePop(x,y){
+		// $movePop.css({left:movePopPoint.x+x+'px',top:movePopPoint.y+y+'px'});
+		// $('#test').html('translate3d('+(movePopPoint.x+x)+'px,'+(movePopPoint.y+y)+'px,0)');
+		$movePop[0].style.webkitTransform='translate3d('+(movePopPoint.x+x)+'px,'+(movePopPoint.y+y)+'px,0)';
+		movePopPoint.x+=x;
+		movePopPoint.y+=y;
+	}
+	function devicemotion(e){
+		var acceleration =e.accelerationIncludingGravity;
+		if(ua.indexOf("mac")>=0) moveBarX+=acceleration.x*moveBarSpeed;
+		else moveBarX+=acceleration.x*-1*moveBarSpeed*2;
+		if(moveBarX>=(windowW-moveBar.x*gameScale)*0.5) moveBarX=(windowW-moveBar.x*gameScale)*0.5;
+		if(moveBarX+(windowW-moveBar.x*gameScale)*0.5<=0) moveBarX=-(windowW-moveBar.x*gameScale)*0.5;
+		// $('#test').html("x:"+acceleration.x+",y:"+acceleration.y+",z:"+acceleration.z);
+		$moveBar[0].style.webkitTransform='translate3d('+(moveBarX)+'px,0,0)';
+	}
+
+	function addDevicemotion(){
+		window.addEventListener('devicemotion', devicemotion, false);
+	}
+
+	function removeDevicemotion(){
+		window.removeEventListener('devicemotion', devicemotion, false);
+	}
+
+	game.init=function(){
+		$gameHeader.css({height:gameHeaderSize.y*gameScale+'px'});
+		$gameHeader.css({backgroundImage:'url(images/top_bg.png)'});
+		$gameArea.css({height:gameAreaSize.y+'px'});
+		$timeIcon.css({width:gameHeaderTimeSize.x*gameScale,height:gameHeaderTimeSize.y*gameScale+'px'});
+		$timeIcon.css({backgroundImage:'url(images/time.png)'});
+		$timeIcon.css({marginLeft:10*gameScale,marginTop:10*gameScale+'px'});
+		$btns.css({width:gameHeaderBtnSize.x*gameScale,height:gameHeaderBtnSize.y*gameScale+'px'});
+		$btns.css({backgroundImage:'url(images/sprite.png)',backgroundSize:spriteSize.x*gameScale+'px '+spriteSize.y*gameScale+'px'});
+		$btns.each(function(i){
+			$(this).css({backgroundPosition:-gameHeaderBtnSize.x*gameScale*i+'px 0px'})
+		});
+		$timeBar.css({width:gameHeaderTimeBarSize.x*gameScale,height:gameHeaderTimeBarSize.y*gameScale+'px'});
+		$timeBar.css({marginLeft:10*gameScale,marginTop:10*gameScale+'px'});
+		$timeStatus.css({width:'100%'});
+		$moveBar.css({width:moveBar.x*gameScale,height:moveBar.y*gameScale+'px'});
+		$moveBar.css({backgroundImage:'url(images/move_bar.png)',backgroundSize:moveBar.x*gameScale+'px '+moveBar.y*gameScale+'px'});
+		$moveBar.css({left:(windowW-moveBar.x*gameScale)*0.5+'px'});
+		// $movePop.css({left:movePopDefaultPoint.x+'px',top:movePopDefaultPoint.y+'px'});
+		$movePop.css({left:'0px',top:'0px'});
+		$movePop[0].style.webkitTransform='translate3d('+(movePopDefaultPoint.x)+'px,'+(movePopDefaultPoint.y)+'px,0)';
+		$popDestroy.css({height:popSize.y*gameScale*5+'px'});
+
+		$('.pops').html(createPops());
+		$movePop.html(createOnePop(1,0,0,0,0));
+		game.getWinnerList();
+		addMusic();
+	};
+
+	function addMusic(){
+		// var music='';
+		// music+='<audio id="MgameWin"><source src="music/gameWin.mp3" type="audio/mp3" /></audio>';
+		// music+='<audio id="MpopBom"><source src="music/popBom.mp3" type="audio/mp3" /></audio>';
+		// music+='<audio id="MpopDestroy"><source src="music/popDestroy.mp3" type="audio/mp3" /></audio>';
+		// music+='<audio id="Mrebound"><source src="music/rebound.mp3" type="audio/mp3" /></audio>';
+		// $('body').append(music);
+		MgameWin=document.getElementById('MgameWin');
+		MpopBom=document.getElementById('MpopBom');
+		MpopDestroy=document.getElementById('MpopDestroy');
+		Mrebound=document.getElementById('Mrebound');
+		MbgMusic=document.getElementById('MbgMusic');
+	}
+
+	game.changeSpeed=function(speed,gmaeFps){
+		movePopSpeed=speed;
+		gmaeFps=gmaeFps;
+	};
+
+	window.game=game;
+	game.loadImages();
+	// game.init();
+	document.body.addEventListener('touchmove', function(e) {
+	    e.stopPropagation();
+	    e.preventDefault();
+	});
+});
+	
+</script>
+
+</body>
+</html>

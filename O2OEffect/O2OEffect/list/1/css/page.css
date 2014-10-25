@@ -1,0 +1,161 @@
+
+*{margin:0;padding:0;}
+html, body {background: #008BFF;}
+body {
+	color: #FFF;
+	font:14px Helvetica, Arial, sans-serif;
+}
+
+
+@-webkit-keyframes loading {
+	0% {
+		-webkit-transform: rotateZ(0);
+		-moz-transform: rotateZ(0);
+		transform: rotateZ(0);
+	}
+	100% {
+		-webkit-transform: rotateZ(360deg);
+		-moz-transform: rotateZ(360deg);
+		transform: rotateZ(360deg);
+	}
+}
+@-moz-keyframes loading {
+	0% {
+		-webkit-transform: rotateZ(0);
+		-moz-transform: rotateZ(0);
+		transform: rotateZ(0);
+	}
+	100% {
+		-webkit-transform: rotateZ(360deg);
+		-moz-transform: rotateZ(360deg);
+		transform: rotateZ(360deg);
+	}
+}
+@keyframes loading {
+	0% {
+		-webkit-transform: rotateZ(0);
+		-moz-transform: rotateZ(0);
+		transform: rotateZ(0);
+	}
+	100% {
+		-webkit-transform: rotateZ(360deg);
+		-moz-transform: rotateZ(360deg);
+		transform: rotateZ(360deg);
+	}
+}
+@-webkit-keyframes popup {
+	0% {
+		-webkit-transform: scale(0);
+		-moz-transform: scale(0);
+		transform: scale(0);
+		opacity: 0;
+	}
+	50% {
+		-webkit-transform: scale(1.2);
+		-moz-transform: scale(1.2);
+		transform: scale(1.2);
+		opacity: 1;
+	}
+	80% {
+		-webkit-transform: scale(0.9);
+		-moz-transform: scale(0.9);
+		transform: scale(0.9);
+	}
+	100% {
+		-webkit-transform: scale(1);
+		-moz-transform: scale(1);
+		transform: scale(1);
+		opacity: 1;
+	}
+}
+
+.loading{
+	width:30px;height:30px;position:absolute;top:50%;left:50%;z-index:101;
+	margin:-17px 0 0 -17px;
+	border:4px solid #FFF;border-radius:30px;
+	border-color:transparent transparent #FFF #FFF;
+	-webkit-animation: loading 1.2s linear infinite;
+	-moz-animation: loading 1.2s linear infinite;
+	animation: loading 1.2s linear infinite;
+}
+.popup{
+	-webkit-animation: popup 0.5s linear 100ms;
+	-moz-animation: popup 0.5s linear 100ms;
+	animation: popup 0.5s linear 100ms;
+	-webkit-animation-fill-mode: backwards;
+	-moz-animation-fill-mode: backwards;
+	animation-fill-mode: backwards;
+}
+
+.grey-shadow{position:fixed;z-index:100;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);}
+
+.popupbox{position:absolute;z-index:110;top:50%;left:50%;margin:-160px 0 0 -147px;width:294px;min-height:320px;text-align:center;background:no-repeat center 0;background-size:100% auto;display:none;}
+
+
+
+.popupbox#tips-gamestart{margin-top:-160px;}
+.popupbox#tips-gameover,
+.popupbox#tips-again,
+.popupbox#send-score{width:308px;height:420px;margin:-210px 0 0 -154px;background-image:url(bg-award.png);}
+.popupbox#sharefriend{position:fixed;top:0;left:0;right:0;bottom:0;width:auto;height:auto;margin:0;background:url(share_hand.png) no-repeat right top;background-size:258px auto;}
+
+
+.popupbox .btn-closer{position:absolute;bottom:24px;left:50%;margin-left:-22px;width:45px;height:45px;background:url(btn-closer.png) no-repeat 0 0;background-size:100% auto;}
+
+
+
+.popup .loading{
+	display:none;
+	-webkit-animation:none;
+	-moz-animation:none;
+	animation:none;
+}
+.popupbox.popup,.popupbox.show{display:block;}
+
+.popupbox .top-img{height:72px;background:url(bg-start-title.png) no-repeat center bottom;background-size:222px auto;}
+
+.popup-header{height:40px;padding-top:7px;text-align:center;position:relative;margin-bottom:-4px;background:url(bg-success-title.png) no-repeat center 0;background-size:236px;}
+.popup-header i{display:block;height:36px;background:url(titles.png) no-repeat center 0;background-size:270px auto;}
+.popup-header i.title1{background-position:center 0;}
+.popup-header i.title2{background-position:center -50px;}
+
+.tips-title{height:40px;line-height:40px;margin-bottom:10px;color:#FFE7B9;font-size:22px;font-weight:bold;text-shadow:0 2px 1px rgba(0,0,0,0.4);}
+.inputtext{width:180px;height:19px;padding:6px;margin-top:6px;border:0 none;line-height:19px;background:#9C680F;color:#E5B158;box-shadow:inset 1px 1px 3px rgba(0,0,0,0.6),0 1px 0 rgba(255,255,255,0.6);border-radius:6px;font-size:14px;}
+
+
+.popupbox .content{width:227px;padding:4px 4px 15px;margin:0 auto;background:url(bg-success.png) no-repeat center bottom;background-size:235px auto;}
+.popupbox .content .text{padding:10px 5px;text-shadow:0 1px 0 rgba(0,0,0,0.6);line-height:1.6;}
+#tips-gameover .content,
+#send-score .content{width:250px;margin:0 auto;text-align:center;font-size:14px;padding:5px 0 10px;color:#503200;background:none transparent;}
+
+.popupbox .btm-link{color:#DEF1FF;}
+.popupbox .btm-link:after{content:'';display:inline-block;height:8px;width:8px;border:1px solid #DEF1FF;border-left:0;border-bottom:0;
+	-webkit-transform:rotate(45deg);
+	-moz-transform:rotate(45deg);
+	-ms-transform:rotate(45deg);
+	-o-transform:rotate(45deg);
+	transform:rotate(45deg);
+}
+#send-score .btm-link,
+#tips-gameover .btm-link{color:#503200;}
+#send-score .btm-link:after,
+#tips-gameover .btm-link:after{border-color:#503200;}
+#send-score .btm-link{text-decoration:underline;}
+
+
+
+.btn{display:block;margin:0 auto;margin-bottom:14px;width:183px;height:40px;background:url(btns.png) no-repeat 0 0;background-size:183px;box-shadow:0 3px 0 rgba(0,0,0,0.1);border-radius:4px;text-indent:-99em;overflow:hidden;}
+.btn.btn-start{background-position:0 0;}
+.btn.btn-list{background-position:0 -50px;}
+.btn.btn-awards{background-position:0 -100px;}
+.btn.btn-continue{background-position:0 -150px;}
+.btn.btn-share{background-position:0 -200px;}
+.btn.btn-atten{background-position:0 -350px;}
+.btn.btn-again{background-position:0 -400px;}
+.btn.btn-send,
+.btn.btn-resetform{display:inline-block;width:93px;}
+.btn.btn-send{background-position:0 -250px;}
+.btn.btn-resetform{background-position:0 -300px;}
+
+
+

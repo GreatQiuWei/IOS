@@ -1,0 +1,378 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta id="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link rel="stylesheet" href="css/global.css" />
+<script src="js/zepto.min.js"></script>
+<script src="js/zepto.touch.js"></script>
+
+<title>国美在线 - 大转盘</title>
+
+</head>
+
+<body>
+<div id="LandscapeNotice"></div>
+
+<div id="loading" class="page">
+	<div class="center fs14">
+		<span>正在加载...</span>
+		<span style="margin-left:1rem;" class="loadStatus">0</span>
+		<span>%</span>
+	</div>
+</div>
+
+<div id="message">
+	<div class="bg"></div>
+	<div class="panel">
+		<div class="text"></div>
+		<a href="javascript:game.showPageInfo();" class="tdn"><div class="btn">马上领奖</div></a>
+		<!-- <a href="javascript:game.closeMsg();"><div class="close"></div></a> -->
+	</div>
+</div>
+
+<div id="pageIndex" class="page">
+	<section><a href="#winnerTitle"><img src="images/banner.jpg" width="100%" alt=""></a></section>
+	<section class="gameArea">
+		<article class="item bgc1 act" rel="1">
+			<div class="content bgi3">
+				<i class="mask transition"></i>
+			</div>
+		</article>
+		<article class="item bgi1" rel="2">
+			<div class="content gift1">
+				<i class="mask transition"></i>
+			</div>
+		</article>
+		<article class="item bgc1" rel="3">
+			<div class="content bgi3">
+				<i class="mask transition"></i>
+			</div>
+		</article>
+		<article class="item bgi1" rel="8">
+			<div class="content gift2">
+				<i class="mask transition"></i>
+			</div>
+		</article>
+		<article id="gameBtn" class="item btn" rel="0">
+			<a href="javascript:game.btn();"><div class="content bgi2"></div></a>
+		</article>
+		<article class="item bgi1" rel="4">
+			<div class="content gift3">
+				<i class="mask transition"></i>
+			</div>
+		</article>
+		<article class="item bgc1" rel="7">
+			<div class="content bgi3">
+				<i class="mask transition"></i>
+			</div>
+		</article>
+		<article class="item bgi1" rel="6">
+			<div class="content gift4">
+				<i class="mask transition"></i>
+			</div>
+		</article>
+		<article class="item bgc1" rel="5">
+			<div class="content bgi3">
+				<i class="mask transition"></i>
+			</div>
+		</article>
+	</section>
+	<section style="padding-bottom:300px;">
+		<a href="#winnerTitle" id="winnerTitle" class="tdn"><div class="winner-title"><span>中奖名单</span><img src="images/arrow.png" height="44" alt=""></div></a>
+			<ul class="winner-list">
+				<!-- <li>恭喜<span class="phone">150****1759</span>获得<span class="gift">神秘礼品</span></li> -->
+			</ul>
+	</section>
+	<div id="test" style="position:fixed;right: 0;top: 10px; color:#ff0000;"></div>
+</div>
+
+<div id="pageInfo" class="page">
+	<section>
+		<header>
+			<h1>恭喜你！</h1>
+			<h2>获得<span class="giftNo">gift</span>，完善领奖信息打开礼品看看~</h2>
+		</header>
+		<div class="arrow"></div>
+		<div class="form">
+			<div class="line">
+				<span>你的姓名：</span>
+				<input type="text" class="name" id="name" placeholder="">
+				<span class="sex male act">男<i></i></span>
+				<span class="sex female">女<i></i></span>
+			</div>
+			<div class="line">
+				<span>你的手机：</span>
+				<input type="text" class="phone" id="phone" placeholder="">
+			</div>
+		</div>
+		<div class="sentBtn">发送</div>
+	</section>
+</div>
+
+<script>
+
+$(document).ready(function(){
+	var game={};
+	var sw=$(window).width();
+	var $item=$('.item');
+	var $gameArea=$('.gameArea');
+	var $message=$('#message');
+	var $messageBg=$('#message .bg');
+	var $messagePanel=$('#message .panel');
+	var $messageBtn=$('#message .panel .btn');
+	var $messageText=$('#message .panel .text');
+	var $messageClose=$('#message .panel .close');
+	var $loading=$('#loading');
+	var $pageInfo=$('#pageInfo');
+	var $pageIndex=$('#pageIndex');
+	var $sentBtn=$('.sentBtn');
+	var $gameBtn=$('#gameBtn');
+	var $giftNo=$('.giftNo');
+	var $sex=$('.sex');
+	var $winnerTitle=$('.winner-title');
+	var $winnerList=$('.winner-list');
+
+	var gameTimes=5;
+	var gameCicle=8*3;
+	var gameResult=0;
+	var gameSpeed=1.8;
+	var itemIndex=0;
+	var stopItemIndex=0;
+	var isGameStart=false;
+	var isGameStop=false;
+	var isBackToIndex=false;
+	var isInfoPage=false;
+	var gameInterval;
+	var gameHardLevel=6;
+	var timer=100;
+	var giftNo=0;
+	var gift=['据说，用舌头舔，<br>中奖的概率高于手指！<br>你也试试？','神秘礼品一份','优衣库短袖T恤一件','蜘蛛网电影票两张','iphone 5c一部','抽奖次数用完！<br>关注更多游戏赚取抽奖机会！','登记成功！<br>继续试试手气吧！','请输入正确姓名！','请输入正确手机号码！'];
+	var sexNo=0; //0：男，1：女
+	var winnerList=[
+		['135****2468','1'],['159****1258','3'],['138****3265','4'],['156****7854','2'],['183****4521','3'],
+		['136****0258','2'],['137****1213','1'],['159****1358','2'],['155****2489','1'],['184****9874','3']
+	];
+	var winnerListStr='';
+	var regName=/^([\u4E00-\uFA29]|[\uE7C7-\uE7F3]){2,4}$/;
+	var regPhone=/^1\d{10}$/;
+
+	var resourceAry=[
+		{"id":"arrow","url":"images/arrow.png"},
+		{"id":"bg","url":"images/bg.png"},
+		{"id":"bg2","url":"images/bg2.png"},
+		{"id":"btn","url":"images/btn.png"},
+		{"id":"close_btn","url":"images/close_btn.png"},
+		{"id":"gift1","url":"images/gift1.png"},
+		{"id":"gift2","url":"images/gift2.png"},
+		{"id":"gift3","url":"images/gift3.png"},
+		{"id":"gift4","url":"images/gift4.png"},
+		{"id":"sex","url":"images/sex.png"},
+		{"id":"text","url":"images/text.png"},
+		{"id":"banner","url":"images/banner.jpg"}
+	];
+
+	$gameArea.css({paddingBottom:sw*0.015625+'px'});
+	$item.each(function(){
+		$(this).css({width:sw*0.3125+'px',height:sw*0.3125+'px',marginLeft:sw*0.015625+'px',marginTop:sw*0.015625+'px'});
+	});
+
+	$.each(winnerList,function(i,val){
+		winnerListStr+='<li>恭喜<span class="phone">'+val[0]+'</span>获得<span class="gift">'+gift[val[1]]+'</span></li>';
+	});
+	$winnerList.append(winnerListStr);
+
+	$messageBg.on('touchend',function(){
+		game.closeMsg();
+	});
+
+	$sentBtn.on('touchend',function(){
+		game.sentInfo();
+	});
+
+	$sex.on('touchend',function(){
+		$(this).addClass('act').siblings().removeClass('act');
+		if($(this).hasClass('male')) sexNo=0;
+		if($(this).hasClass('female')) sexNo=1;
+	});
+
+	$gameBtn.on('touchstart',function(){
+		$('#gameBtn .content').css({backgroundPosition:-sw*0.3125+'px 0'});
+	});
+
+	$gameBtn.on('touchend',function(){
+		$('#gameBtn .content').css({backgroundPosition:'0 0'});
+	});
+
+	$(window).on('touchmove',function(){
+		$('#gameBtn .content').css({backgroundPosition:'0 0'});
+	});
+
+	$(window).on('touchend',function(){
+		$('#gameBtn .content').css({backgroundPosition:'0 0'});
+	});
+
+	game.start=function(){
+		gameTimes--;
+		$('#test').text('您还剩下'+gameTimes+'次抽奖机会！');
+		isGameStart=true;
+		isGameStop=false;
+		setTimeout(function(){
+			game.stop();
+		},2000);
+		gameInterval=setInterval(function(){
+			if(isGameStop){
+				stopItemIndex=(gameResult+8-gameHardLevel)%8==0?8:(gameResult+8-gameHardLevel)%8;
+				if( (itemIndex%8+1)==stopItemIndex ){
+					clearInterval(gameInterval);
+					timer=100;
+					for(var i=0;i<gameHardLevel;i++){
+						timer*=gameSpeed;
+						setTimeout(function(){
+							game.move();
+						},timer);
+						if(i==gameHardLevel-1){
+							setTimeout(function(){
+								game.result();
+								isGameStart=false;
+							},timer+200);
+						}
+					}
+				}
+				else game.move();
+			}
+			else{
+				game.move();
+			}
+		},100);
+	};
+
+	game.move=function(){
+		$('.item[rel="'+(itemIndex%8+1)+'"]').removeClass('act');
+		itemIndex++;
+		$('.item[rel="'+(itemIndex%8+1)+'"]').addClass('act');
+	};
+
+	game.stop=function(){
+		isGameStop=true;
+		gameResult=Math.ceil(Math.random()*8);
+	};
+
+	game.showMsg=function(i,isWin){
+		if(isWin){
+			$messageText.html('亲，你今天运气爆棚！<br>抽中'+gift[i]);
+			$messageBtn.show();
+		}else{
+			$messageText.html(gift[i]);
+		}
+		$message.show();
+		$messagePanel.addClass('pop');
+	};
+
+	game.closeMsg=function(){
+		game.fixedBug();
+		$messageBtn.hide();
+		$messagePanel.removeClass('pop');
+		$message.hide();
+		if(isBackToIndex){
+			game.showPageIndex();
+			isBackToIndex=false;
+		}
+	};
+
+	game.showPageInfo=function(){
+		$('#LandscapeNotice').hide();
+		$giftNo.html(gift[giftNo]);
+		$message.hide();
+		$pageIndex.hide();
+		$pageInfo.show();
+	};
+
+	game.showPageIndex=function(){
+		$message.hide();
+		$pageIndex.show();
+		$pageInfo.hide();
+	};
+
+	game.sentInfo=function(){
+		$messageBtn.hide();
+		var name=$('#name').val();
+		var phone=$('#phone').val();
+		if(!(regName).test(name)){
+			game.showMsg(7,0);
+		}else if(!(regPhone).test(phone)){
+			game.showMsg(8,0);
+		}else{
+			phone=phone.substring(0,3)+'****'+phone.substring(7,11);
+			var winner='<li>恭喜<span class="phone">'+phone+'</span>获得<span class="gift">'+gift[giftNo]+'</span></li>';
+			$winnerList.prepend(winner);
+			isBackToIndex=true;
+			game.showMsg(6,0);
+			$('#LandscapeNotice').attr("style","");
+		}
+	};
+
+	game.result=function(){
+		switch(gameResult){
+			case 1:game.showMsg(0,0);break;
+			case 2:giftNo=1;game.showMsg(1,1);break;
+			case 3:game.showMsg(0,0);break;
+			case 4:giftNo=2;game.showMsg(2,1);break;
+			case 5:game.showMsg(0,0);break;
+			case 6:giftNo=3;game.showMsg(3,1);break;
+			case 7:game.showMsg(0,0);break;
+			case 8:giftNo=4;game.showMsg(4,1);break;
+		}
+	};
+
+	game.loadImages=function(){
+		var total=resourceAry.length;
+        var loaded=0;
+        for(var i in resourceAry)
+        {
+            var image= new Image();
+            image.onload = function(){
+                loaded++;
+                $('.loadStatus').html(Math.floor(loaded/total*100));
+                if(loaded>=total)
+                {
+                   game.setImage();
+                }
+            }
+            image.src = resourceAry[i]["url"];
+        }
+	}
+
+	game.setImage=function(){
+		var ary=resourceAry;
+        for(var i in ary)
+        {
+            var obj=ary[i];
+            // if(obj["id"]=="title") $('header .title').attr("src",obj["url"]);
+        }
+        $loading.hide();
+        $pageIndex.show();
+	};
+
+	game.fixedBug=function(){
+		$('#gameBtn a').attr('href','javascript:;');
+		setTimeout(function(){
+			$('#gameBtn a').attr('href','javascript:game.btn();');
+		},300);
+	};
+
+	game.btn=function(){
+		if(!isGameStart){
+			if(gameTimes>0) game.start();
+			else game.showMsg(5,0);
+		}
+	};
+	
+	window.game=game;
+	game.loadImages();
+});
+	
+</script>
+
+</body>
+</html>

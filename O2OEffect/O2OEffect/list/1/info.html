@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+	<title>民生银行手机银行相关</title>
+	<style>
+	*{margin:0;padding:0;}
+	html,body{background:#1A1817;text-align:center;height:100%;overflow:hidden;}
+	img{width:100%;vertical-align:top;}
+	#wrap{width:100%;height:100%;position:absolute;}
+	#pagesbox{width:100%;height:100%;position:absolute;}
+	.dots{position:absolute;bottom:30px;right:10px;z-index:10;}
+	.dots i{display:block;margin-top:5px;width:10px;height:10px;border:1px solid #FFF;}
+	.dots i.current{background:#FFF;}
+
+	.pages{position:absolute;width:100%;height:100%;background:no-repeat center center;background-size:contain;}
+	.pages.p1{top:0;background-image:url(img/info_01.png);background-color:#007ee8;}
+	.pages.p2{top:100%;background-image:url(img/info_02.png);background-color:#01A278;}
+	.pages.p2 p{position:absolute;bottom:0;left:0;right:0;background:#1A1817;text-align:center;}
+	.pages.p2 img{width:100%;}
+	@media screen and (orientation:portrait) {
+		.pages.p1{top:0;background-image:url(img/info_01.png);}
+		.pages.p2{top:100%;background-image:url(img/info_02.png);}
+	}
+	@media screen and (orientation:landscape) {
+		.pages.p1{top:0;background-image:url(img/info_01_landscape.png);}
+		.pages.p2{top:100%;background-image:url(img/info_02_landscape.png);}
+		.pages.p2 img{width:50%;}
+	} 
+	</style>
+</head>
+<body>
+	<div id="wrap">
+		<p class="dots"><i class="current"></i><i></i></p>
+		<div id="pagesbox">
+			<div class="pages p1">
+			</div>
+			<div class="pages p2">
+				<p><img src="img/info_03.png" onclick="history.back();" alt=""></p>
+			</div>
+		</div>
+	</div>
+	<script>
+	var getE=function(id,all){
+		return all?document.querySelectorAll(id):document.querySelector(id);
+	}
+	function init(){
+		var pagesbox=getE('#pagesbox'),
+			wrap=getE('#wrap');
+		var isTouch=('ontouchstart' in window);
+		var _event={
+			'start':isTouch?"touchstart":"mousedown",
+			'move':isTouch?"touchmove":"mousemove",
+			'end':isTouch?"touchend":"mouseup"
+		}
+		var dragData={
+			point:[],
+			time:[],
+			index:0,
+			distance:0,
+			_distance:0,
+			_vendor:(/webkit/i).test(navigator.appVersion) ? 'webkit' :
+				(/firefox/i).test(navigator.userAgent) ? 'Moz' :
+				(/trident/i).test(navigator.userAgent) ? 'ms' :
+				'opera' in window ? 'O' : '',
+			duration:function(t){
+				pagesbox.style[this._vendor+'TransitionDuration']=t+"s";
+			},
+			translate:function(x){
+				pagesbox.style[this._vendor+'Transform']="translate3d(0,"+x+"px,0)";
+			},
+			getRemain:function(x,t){ return (x/t)*0.13; },
+			reset:function(){
+				this['extent_wrap']=wrap['offsetHeight'];
+				var children=pagesbox.querySelectorAll('.pages')
+				this['extent_list']=children[0]['offsetHeight']*children.length;
+			},
+			setCur:function(){
+				var item=getE('.dots').querySelectorAll('i');
+				for (var i = 0; i < item.length; i++) {
+					item[i].className=i==Math.abs(this['index'])?'current':'';
+				};
+			},
+			starting:false
+		}
+		var initHeight=function(){
+			return
+			wrap.style['height']=pagesbox.style['height']=window.innerHeight;
+			var pages=pagesbox.querySelectorAll('.pages');
+			var x=window.innerHeight/window.innerWidth>=4/3;
+			for (var i = 0; i < pages.length; i++) {
+				pages[i].style['width']=window.innerWidth+'px';
+				if (x) {
+					pages[i].style['height']=window.innerHeight+'px';
+				}else{
+					pages[i].style['height']='auto';
+				};
+			};
+		}
+
+		pagesbox.addEventListener(_event['start'],function(e){
+			dragData['starting']=true;
+			var _e = isTouch ? e.touches[0] : e;
+			dragData['point']=[_e["pageY"]];
+			// dragData['point_x']=[_e["pageX"]];
+			dragData['time']=[new Date()];
+			dragData['_distance']=dragData['distance'];
+			dragData['reset']();
+			dragData['duration'](0);
+		},false);
+		document.documentElement.addEventListener(_event['move'],function(e){
+			if (dragData['starting']) {
+				var _e = isTouch ? e.touches[0] : e;
+					dragData['point'][dragData['point'].length]=_e["pageY"];
+					// dragData['point_x'][dragData['point_x'].length]=_e["pageX"];
+
+				// if (Math.abs(dragData["point_x"][1]-dragData['point_x'][0])<=Math.abs(dragData["point"][1]-dragData['point'][0])) {
+					dragData['time'][dragData['time'].length]=new Date();
+					dragData['distance']=dragData['_distance']+dragData['point'][dragData['point'].length-1]-dragData['point'][0];
+					dragData['translate'](dragData['distance']);
+					e.preventDefault();
+					e.stopPropagation();
+					return false;
+				// }else{
+					// dragData['starting']=false;
+				// };
+			};
+		},false);
+		document.documentElement.addEventListener(_event['end'],function(){
+			if (dragData['starting']&&dragData['point'].length>2) {
+				var remain=dragData['getRemain'](dragData['point'][dragData['time'].length-1]-dragData['point'][dragData['point'].length-2],(dragData['time'][dragData['time'].length-1]-dragData['time'][dragData['time'].length-2])/1000);
+				dragData['duration'](0.3);
+				if (dragData['distance']+remain>0/*||dragData['extent_list']<=dragData['extent_wrap']*/) {
+					dragData['index']=0;
+					dragData['distance']=0;
+				}else if (dragData['extent_list']+dragData['distance']+remain<dragData['extent_wrap']) {
+					dragData['index']=1-Math.round(dragData['extent_list']/dragData['extent_wrap']);
+					dragData['distance']=dragData['extent_wrap']-dragData['extent_list'];
+				}else{
+					var _dis=dragData['distance']+remain;
+					var index=0;
+					if(Math.abs(_dis%dragData['extent_wrap'])>=dragData['extent_wrap']/3){
+						index=(Math.round((_dis-_dis%dragData['extent_wrap'])/dragData['extent_wrap'])-1)
+					}else{
+						index=Math.round((_dis-_dis%dragData['extent_wrap'])/dragData['extent_wrap'])
+					}
+					dragData['index']=index;
+					dragData['distance']=index*dragData['extent_wrap'];
+				}
+				dragData['setCur']();
+				dragData['translate'](dragData['distance']);
+			}
+			dragData['starting']=false;
+		},false);
+		window.addEventListener('resize',function(){
+			setTimeout(function(){
+				dragData['reset']();
+				initHeight();
+				_dis=dragData['index']*dragData['extent_wrap'];
+				dragData['distance']=_dis;
+				dragData['translate'](dragData['distance']);
+			},300);
+		},false);
+		initHeight();
+
+
+	}
+
+	window.onload=init;
+
+
+
+	</script>
+</body>
+</html>

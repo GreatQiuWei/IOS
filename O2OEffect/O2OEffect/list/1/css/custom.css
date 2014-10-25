@@ -1,0 +1,156 @@
+html,body{min-height:100%;}
+
+.header{margin-bottom:10px;background:url(header.png) no-repeat center 0;background-size:280px auto;}
+.header:after {content:"";display: block;clear: both;height:0;overflow:hidden;}
+
+
+.header-top{
+	height:80px;
+	margin-bottom:10px;
+}
+
+.footer{padding:50px 0;background:url(footer.png) no-repeat center 20px;background-size:112px auto;text-align:center;font-size:12px;}
+.footer a{color:#DEF1FF;}
+.footer a:after{content:'';display:inline-block;height:8px;width:8px;border:1px solid #DEF1FF;border-left:0;border-bottom:0;
+	-webkit-transform:rotate(45deg);
+	-moz-transform:rotate(45deg);
+	-ms-transform:rotate(45deg);
+	-o-transform:rotate(45deg);
+	transform:rotate(45deg);
+}
+
+.restart-button {
+	float: right;
+	width:117px;
+	border-radius: 3px;
+	text-decoration: none;
+	color: #FFEDCA;
+	height: 48px;
+	cursor: pointer;
+	background:url(btn-restart.png) no-repeat 0 0;
+	background-size:117px auto;
+	text-indent:-99em;overflow:hidden;
+	-webkit-tap-highlight-color:rgba(0,0,0,0);
+	tap-highlight-color:rgba(0,0,0,0);
+}
+.restart-button:active{
+	background-position:0 -50px;
+}
+
+
+.scores-container {
+	float:left;
+	width:410px;
+	text-align: center;
+}
+.scores-container>div{
+	float:left;
+	width:46%;
+	padding-top:28px;
+	height: 16px;
+	font-size:12px;
+	line-height:14px;
+	font-weight:bold;
+	border-radius: 3px;
+	background-color:#DFF0FF;
+	background-image:url(bg-scores.png);
+	background-repeat:no-repeat;
+	background-size:200px auto;
+	box-shadow:0 3px 0 rgba(0,0,0,0.1),inset 0 3px 0 0px rgba(255,255,255,0.1);
+}
+.scores-container>div:after{color:#FFF;font-size:12px;}
+.scores-container .title-container{display:block;color:#00A67A;background-position:center 0;margin-right:4%;}
+.scores-container .score-container{display:block;color:#DB8009;background-position:center -100px;}
+.scores-container .title-container:after{content:"职位";}
+.scores-container .score-container:after {content:"职场经验";}
+.scores-container>div .animate-tips{color:#FFF;font-size:14px;background:rgba(0,0,0,0.2);border-radius:10px;}
+
+
+
+
+	.pinshu{font-size:16px;line-height:1.8;text-indent:2em;text-align:left;padding:0 0.5em;}
+	.pinshu span{vertical-align:bottom;}
+	.pinshu input{vertical-align:bottom;width:8em;height:30px;font-size:16px;text-align:center;border:0 none;background:transparent;border-bottom:1px solid #333;outline:none;}
+	.pinshu input:focus{}
+	.pinshu input::-moz-placeholder{color:#A68B1A;}
+	.pinshu input::-webkit-input-placeholder{color:#A68B1A;}
+	.pinshu .level-title{font-weight:bold;text-align:center;text-indent:0;display:inline-block;}
+	
+
+	.avatar-box{position:relative;}
+	.avatar-box>span{position:absolute;top:50%;margin-top:-12px;height:24px;width:24px;}
+	.avatar-box>span:after{content:'';position:absolute;left:0;width:50%;height:50%;border:6px solid transparent;
+		-webkit-transform:rotateZ(-45deg);
+	}
+	.avatar-box>span.btn-prev{right:50%;margin-right:70px;}
+	.avatar-box>span.btn-next{left:50%;margin-left:70px;}
+	.avatar-box>span.btn-prev:after{border-color:rgba(144,125,21,0.5) transparent transparent rgba(144,125,21,0.5);}
+	.avatar-box>span.btn-next:after{border-color:transparent rgba(144,125,21,0.5) rgba(144,125,21,0.5) transparent;}
+
+	.popup .avatar-box>span.btn-prev{-webkit-animation:avatar-prev 1.4s infinite;}
+	.popup .avatar-box>span.btn-next{-webkit-animation:avatar-next 1.4s infinite;}
+
+	.avatar-big{width:120px;height:120px;margin:0 auto;border:4px solid #FEECC4;border-radius:24px;background:#FEECC4 no-repeat center center;background-size:contain;box-shadow:0 1px 1px rgba(0,0,0,0.6);}
+
+
+	@-webkit-keyframes avatar-prev{
+		0%{-webkit-transform:translateX(0px);}
+		15%{-webkit-transform:translateX(-5px);}
+		30%{-webkit-transform:translateX(0px);}
+		45%{-webkit-transform:translateX(-5px);}
+		100%{-webkit-transform:translateX(0px);}
+	}
+	@-webkit-keyframes avatar-next{
+		0%{-webkit-transform:translateX(0px);}
+		15%{-webkit-transform:translateX(5px);}
+		30%{-webkit-transform:translateX(0px);}
+		45%{-webkit-transform:translateX(5px);}
+		100%{-webkit-transform:translateX(0px);}
+	}
+
+
+
+
+
+
+
+.tile .tile-inner{text-indent:-10em;overflow:hidden;background:url(levels.png) no-repeat -174px -116px;}
+.tile .tile-inner div{display:none}
+.tile.tile-2   .tile-inner {background-position:0px 0px;}
+.tile.tile-4   .tile-inner {background-position:-116px 0px;}
+.tile.tile-8   .tile-inner {background-position:-232px 0px;}
+.tile.tile-16  .tile-inner {background-position:-348px 0px;}
+.tile.tile-32  .tile-inner {background-position:0px -116px;}
+.tile.tile-64  .tile-inner {background-position:-116px -116px;}
+.tile.tile-128 .tile-inner {background-position:-232px -116px;}
+.tile.tile-256 .tile-inner {background-position:-348px -116px;}
+.tile.tile-512 .tile-inner {background-position:0px -232px;}
+.tile.tile-1024 .tile-inner{background-position:-116px -232px;}
+.tile.tile-2048 .tile-inner{background-position:-232px -232px;}
+.tile.tile-4096 .tile-inner{background-position:-348px -232px;}
+.tile.tile-8192 .tile-inner{background-position:0px -348px;}
+.tile.tile-16384 .tile-inner{background-position:-116px -348px;}
+
+
+
+@media screen and (max-width: 520px) {
+	.scores-container {
+		width:160px;
+	}
+	.tile .tile-inner{background-size:232px auto;}
+	.tile.tile-2   .tile-inner {background-position:0px 0px;}
+	.tile.tile-4   .tile-inner {background-position:-58px 0px;}
+	.tile.tile-8   .tile-inner {background-position:-116px 0px;}
+	.tile.tile-16  .tile-inner {background-position:-174px 0px;}
+	.tile.tile-32  .tile-inner {background-position:0px -58px;}
+	.tile.tile-64  .tile-inner {background-position:-58px -58px;}
+	.tile.tile-128 .tile-inner {background-position:-116px -58px;}
+	.tile.tile-256 .tile-inner {background-position:-174px -58px;}
+	.tile.tile-512 .tile-inner {background-position:0px -116px;}
+	.tile.tile-1024 .tile-inner{background-position:-58px -116px;}
+	.tile.tile-2048 .tile-inner{background-position:-116px -116px;}
+	.tile.tile-4096 .tile-inner{background-position:-174px -116px;}
+	.tile.tile-8192 .tile-inner{background-position:0px -174px;}
+	.tile.tile-16384 .tile-inner{background-position:-58px -174px;}
+
+}

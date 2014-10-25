@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+	<title>中惠璧珑湾</title>
+	<link rel="stylesheet" href="css/base.css">
+	<link rel="stylesheet" href="css/custom.css">
+</head>
+<body>
+	<div class="wrap" id="wrap">
+		<div class="section" source="sources/01.jpg"></div>
+		<div class="section" source="sources/02.jpg"></div>
+		<div class="section" source="sources/03.png"></div>
+		<div class="section" source="sources/04.png"></div>
+	</div>
+	<div class="btm-btns">
+		<a href="tel:02039099988" id="tel"></a>
+		<span class="btn-map" source="getmap"></span>
+	</div>
+	
+
+	<div id="global-arrow">
+		<svg width="38" height="22" version="1.1">
+			<line x1="2" y1="20" x2="20" y2="2" style="stroke:#FFFFFF;stroke-width:4;"></line>
+			<line x1="18" y1="2" x2="36" y2="20" style="stroke:#FFFFFF;stroke-width:4;"></line>
+		</svg>
+	</div>
+
+	<script type="text/javascript" src="http://api.map.baidu.com/api?v=1.4&ak=ca8Ak7KA2PLWFBmqrbK3KCSG"></script>
+	<script src="js/module.manager.js"></script>
+	<script src="js/cyx.swipe.js"></script>
+	<script src="js/case.manager.js"></script>
+	<script>
+		/*var tel=ev.get('#tel');
+		var hasCall=false;
+		tel.addEventListener('click',function(){
+			if(!hasCall){
+				hasCall=true;
+				var action_time=Math.round(new Date().getTime()/1000);
+				var url="/crazyAd/tongji.php";
+				var data={"advert_id":"case_zhblw","action_time":action_time};
+				var str='';
+				var render=function(){};
+				goAjax(url,render,data);
+			}
+		},false)
+		function goAjax(postAjax,render,data){
+			$.ajax({
+				url:postAjax,
+				async : true,
+				type : "post",
+				data : data,
+				dataType : 'json',
+				timeout : 10000,
+				success : render,
+				error : function(XMLHttpRequest, textStatus, errorThrown){
+					
+				}
+			});
+		}*/
+	</script>
+</body>
+</html>

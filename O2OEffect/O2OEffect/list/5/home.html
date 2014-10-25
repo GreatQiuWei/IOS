@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+	<title>易迅七周年-幸运刮刮卡</title>
+	<style>
+	*{margin:0;padding:0;}
+	html{min-height:100%;}
+	body{min-height:100%;text-align:center;background:#90150D;}
+	.loading{position:fixed;z-index:100;top:0;left:0;right:0;bottom:0;background:rgba(255,255,255,0.9) url(img/loading.gif) no-repeat center center;background-size:32px auto;}
+
+	.wrap{margin:0 auto;width:320px;min-height:280px;background:url(img/bg.jpg) no-repeat center 0;background-size:100% auto;position:relative;padding-top:160px;}
+
+	.times,
+	.scores{position:absolute;top:20px;}
+	.times{left:20px;}
+	.scores{right:20px;}
+	.icons{display:inline-block;height:31px;background:url(img/icons.png) no-repeat 0 0;background-size:60px auto;vertical-align:middle;}
+	.times .icons{width:31px;background-position:0 0;}
+	.scores .icons{width:57px;background-position:0 -50px;}
+	.times span,
+	.scores span{display:inline-block;margin-left:8px;vertical-align:middle;color:#FFF;}
+
+
+	.container{margin:0 0 0 30px;width:260px;height:150px;text-align:center;position:relative;}
+	.container .prize,
+	.container canvas,
+	.cover{width:260px;height:150px;position:absolute;top:0;left:0;}
+	.container .prize{z-index:0;background: no-repeat center center;background-size:100% auto;}
+	.container canvas{z-index:1;}
+	.container .cover{z-index:2;pointer-events:auto;font-size:16px;line-height:1.6;color:#000;text-align:center;}
+	.container .cover .text{padding:25px 10px 10px;}
+	.container .cover .text strong{color:#FF2B06;}
+	.container .cover .btn{display:inline-block;padding:6px 16px;line-height:18px;border-radius:100px;color:#FFF;text-decoration:none;}
+	.container .cover .btn:nth-child(3){margin-left:10px;}
+	.container .cover .btn.color0{background:#D84228;}
+	.container .cover .btn.color1{background:#606060;}
+	.container .cover .btn.color2{background:#2487DC;}
+
+	</style>
+</head>
+<body>
+	<div class="loading"></div>
+	<div class="wrap">
+		<div class="times"><i class="icons"></i><span id="chance">X10</span></div>
+		<div class="scores"><i class="icons"></i><span id="scores">X0</span></div>
+		<div class="container">
+			<div class="prize"></div>
+			<canvas id="ggk"></canvas>
+			<div class="cover">
+				
+			</div>
+		</div>
+	</div>
+	<script src="../../js/appscommon.js"></script>
+	<script src="../loader.js"></script>
+	<script>
+
+	var canvas = document.getElementById('ggk'),
+		ctx = canvas.getContext('2d'),
+		img = new Image(),
+		prize= document.querySelector('.prize'),
+		run = false,
+		cover=document.querySelector('.cover');
+
+	var gameInfo={
+		chance:10,
+		score:0
+	}
+	var award={
+		list:[2,2,5,5,5,5,10,10,10,10,10,50,100,200],//奖项等级
+		geted:[],//已获得的奖品
+		current:0,
+		set:function(){
+			// var num=Math.floor(Math.random()*4)+1;//1~4
+			var num_prize=Math.random();
+			var img_name='img/prize_over.png';//没中奖图片
+			this['current']=0;
+			if (num_prize<0.2) {
+				img_name='img/prize_win.png';//中奖图片
+				num_prize=Math.floor(Math.random()*this.list.length);//0~4奖项
+				this['current']=num_prize;//当前的奖品
+				this.geted.push(num_prize);//将奖品添加到已中奖列表
+			};
+			prize.style.backgroundImage='url('+img_name+')';
+		},
+		changeToScore:function(){
+			return this.list[this.current];
+		},
+		setScores:function(){
+			var scores=0;
+			for (var i = 0; i < this.geted.length; i++) {
+				scores+=this.list[this.geted[i]]
+			};
+			document.querySelector('#scores').innerHTML='X'+scores;
+		}
+
+	}
+
+	function tips(type){
+		var html='';
+		switch(type){
+			case 'start':
+				html='<div class="text">刮一刮图层<br>可以获得易迅购物红包哦！</div><span class="btn color0" onclick="start()">开始刮奖</span>';
+				break;
+
+
+			case 'happy':
+				var string=award.changeToScore();
+				html='<div class="text">恭喜你获得<strong>'+string+'元</strong>易迅现金券！<br>在易迅网购物直接当现金用哦～</div><a class="btn color2" href="http://m.yixun.com/">果断使用</a><span class="btn color0" onclick="start()">刮下一张</span>';
+				break;
+
+
+			case 'hurt':
+				var num=Math.random();
+				var string='据说，用舌头刮，<br>中奖的概率高于手指！你也试试？';
+				if (num>0.333) {string='没中奖？<br>赶紧吃个苹果提高中奖概率吧！'};
+				if (num>0.666) {string='刮奖之前，<br>请烧三柱高香！'};
+				html='<div class="text">'+string+'</div><span class="btn color1" onclick="other()">玩点别的</span><span class="btn color0" onclick="start()">刮下一张</span>';
+				break;
+
+
+			case 'nomore':
+				html='<div class="text">亲，木有刮刮卡了！<br>明天再来还有10张哦</div><span class="btn color1" onclick="other()">玩点别的</span>';
+				if (award['geted'].length) {
+					html=html+'<a class="btn color2" href="http://m.yixun.com/">果断使用</a>'
+				};
+				break;
+
+
+			default:
+				html='';
+		}
+		cover.innerHTML=html;
+		cover.style.display=html?'block':'none';
+	}
+	function setChance(){
+		document.querySelector('#chance').innerHTML='X'+gameInfo['chance'];
+	}
+	function start(){
+		ctx.globalCompositeOperation = 'source-over';
+		ctx.drawImage(img,0,0);
+		ctx.globalCompositeOperation = 'destination-out';
+		run=false;
+
+		if (!gameInfo['chance']) {
+			tips('nomore');
+			return;
+		};
+		tips();
+		gameInfo['chance']--;
+		setChance();
+	}
+	function other(){
+		history.back();
+	}
+
+	var core = {
+		w : 260,
+		h : 150,
+		drawing : false,
+		curPoint : {
+			x : 0,
+			y : 0
+		},
+		lastPoint : {
+			x : 0,
+			y : 0
+		}
+	}
+	function event_bind(){
+		var is_touch = 'ontouchstart' in window;
+		var event_start	= is_touch ? 'touchstart' : 'mousedown';
+		var event_move = is_touch ? 'touchmove' : 'mousemove';
+		var event_end = is_touch ? 'touchend' : 'mouseup';
+		var showresult;
+		canvas.addEventListener(event_start,function(e){
+			e.preventDefault();
+			is_touch && (e = e.touches[0]);
+			core.drawing = true;
+			var offset=canvas.getBoundingClientRect();
+			core.lastPoint = {
+				x: e.pageX - offset.left,
+				y: e.pageY - offset.top
+			};
+			core.curPoint = core.lastPoint;
+			if (!run) {
+				run=true;
+				award.set();
+			};
+		});
+
+		canvas.addEventListener(event_move,function(e){
+			e.preventDefault();
+			is_touch && (e = e.touches[0]);
+			
+			var offset=canvas.getBoundingClientRect();
+			var cx = e.pageX - offset.left,
+				cy = e.pageY - offset.top;
+			core.curPoint = {
+				x : cx,
+				y : cy
+			};
+			
+		});
+		//结束
+		canvas.addEventListener(event_end,function(e){
+			e.preventDefault();
+			core.drawing = false;
+			core.lastPoint = {
+				x : 0,
+				y : 0
+			};
+			
+				ctx.fillRect(0,0,core.w,core.h);
+				award.setScores();
+				clearTimeout(showresult);
+				showresult=setTimeout(function(){
+					ctx.globalCompositeOperation = 'source-over';
+					ctx.drawImage(img,0,0);
+					if (award['current']) {
+						tips('happy');
+					}else{
+						tips('hurt');
+					}
+				},600);
+			/*var _data=ctx.getImageData(0,0,core.w,core.h).data;
+			for(var i=0,j=0;i<_data.length;i+=4){
+				if(_data[i+3]){
+					j++;
+				}
+			}
+			if(j<=core.w*core.h*0.75){
+				ctx.fillRect(0,0,core.w,core.h);
+				award.setScores();
+				clearTimeout(showresult);
+				showresult=setTimeout(function(){
+					ctx.globalCompositeOperation = 'source-over';
+					ctx.drawImage(img,0,0);
+					if (award['current']) {
+						tips('happy');
+					}else{
+						tips('hurt');
+					}
+				},600);
+			}*/
+		});
+
+		canvas.addEventListener('touchcancel',function(e){
+			e.preventDefault();
+			core.drawing = false;
+			core.lastPoint = {
+				x : 0,
+				y : 0
+			};
+		});
+
+		
+	}
+	function draw(){
+		if(!core.drawing){ return;}
+
+		var lp = core.lastPoint,
+			cp = core.curPoint;
+		
+		ctx.save();
+		ctx.lineWidth = 30;	
+		ctx.fillStyle = ctx.strokeStyle = '#000';	
+		ctx.lineCap = 'round';
+
+		ctx.beginPath();
+		if(lp.x && lp.x == cp.x && lp.y == cp.y){
+			ctx.arc(cp.x,cp.y,ctx.lineWidth/2,0,Math.PI*2,true);
+			ctx.fill();
+		}else{
+			ctx.moveTo(lp.x||cp.x, lp.y||cp.y);
+			ctx.lineTo(cp.x, cp.y);
+			ctx.stroke();
+		}
+		ctx.restore();
+
+		core.lastPoint = {
+			x: cp.x,
+			y: cp.y
+		};
+	}
+	function init(){
+		img.addEventListener('load', function(e) {
+			ctx.drawImage(img,0,0);
+			ctx.globalCompositeOperation = 'destination-out';
+		});
+		img.src = 'img/cover.png';
+		canvas.width=core.w;
+		canvas.height=core.h;
+		setInterval(function() {
+			draw();
+		}, 0);
+		tips('start');
+		award.setScores()
+		event_bind();
+
+	}
+
+
+
+
+				document.querySelector('.loading').style.display='none';
+				init();
+
+	</script>
+</body>
+</html>

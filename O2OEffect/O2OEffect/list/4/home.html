@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<title>LBS星巴克</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+		<style>
+		*{margin:0;padding:0;}
+		html,body,.wrap{height:100%;overflow:hidden;}
+		
+		.top{z-index:100;position:absolute;top:0;left:0;width:100%;height:35px;background:#BA0A1A url(top.png) repeat-x;background-size:auto 35px;box-shadow:0 1px 2px rgba(0,0,0,0.5);}
+		.top img{height:22px;float:right;margin:7px 10px 0;}
+		.map,
+		.transit,
+		.store{z-index:10;position:absolute;top:35px;left:0;bottom:0;width:100%;background:#000;}
+		.transit{display:none;}
+		.store{background:url(bg.jpg) no-repeat center center;background-size:cover;display:none;}
+		.store.show{display:block;}
+		.storebox{position:absolute;top:0;left:5%;width:90%;background:#EAE7DE;border-radius:0 0 6px 6px;box-shadow:3px 5px 10px rgba(0,0,0,0.5);
+		}
+		.storebox img{vertical-align:top;}
+		.storebox p{padding:10px 15px;font-size:16px;}
+		.storebox .storeName{position:absolute;left:10px;right:10px;top:80px;font-size:24px;color:#FFF;text-shadow:0 1px 3px rgba(0,0,0,0.8);text-align:center;}
+		.storebox .route{color:#1F7EE0;font-size:20px;background:#F7F4EE;border-bottom:1px solid #C9C6B9;}
+		.storebox .addr{border-top:1px solid #F0EEE8;}
+		.storebox .btns{padding:10px 15px 25px;text-align:center;}
+		.storebox .btns span,
+		.storebox .btns a{display:inline-block;padding:15px 20px;font-size:16px;color:#FFF;border-radius:4px;text-shadow:1px 1px rgba(0,0,0,0.5);}
+		.storebox .btns span{background:#1F7EE0;}
+		.storebox .btns a{margin-left:10px;background:#078C5D;text-decoration:none;}
+
+		.selectorbox{position:fixed;z-index:20;top:50%;left:50%;width:280px;height:240px;margin:-120px 0 0 -140px;background:#FFF;box-shadow:0 0 10px rgba(0,0,0,0.5);
+			opacity:0;-webkit-transform:scale(0);
+		}
+		.selectorbox.animation{
+			opacity:1;-webkit-transform:scale(1);
+			-webkit-animation:zoomin 0.4s 0s linear 1;
+			-webkit-animation-fill-mode:forwards;
+		}
+		.selectorbox .box-top{height:70px;background:#B5001D url(box_top.png) no-repeat 0 center;background-size:auto 60px;}
+		.selectorbox .content{padding:10px;height:160px;text-align:center;}
+		.selectorbox .content img{display:none;}
+		.selectorbox .content.loading img{display:inline-block;}
+		.selectorbox .content.loading p,
+		.selectorbox .content.loading select{display:none;}
+		.selectorbox .content select{width:90%;font-size:16px;}
+		.selectorbox .content p{margin:15px 5%;font-size:16px;text-align:left;}
+		.selectorbox .btn-entry{display:inline-block;padding:12px 22px;background:#078D5D;border-radius:4px;color:#FFF;text-shadow:1px 1px 2px rgba(0,0,0,0.5);}
+
+
+
+		.btn-reSelect{position:absolute;z-index:110;top:35px;right:0;padding:8px 12px;background:#FFF;border-radius: 0 0 0 6px;display:none;box-shadow:0 0 5px rgba(0,0,0,0.6);}
+		.btn-reSelect.show{display:block;}
+
+
+		@-webkit-keyframes zoomin{
+			0%{opacity:0;-webkit-transform:scale(0);}
+			60%{-webkit-transform:scale(1.1);}
+			80%{opacity:1;-webkit-transform:scale(1);}
+			100%{opacity:1;-webkit-transform:scale(1);}
+		}
+		</style>
+	</head>
+<body>
+	<div class="wrap">
+		<div class="top"><img src="logo.png" alt=""></div>
+		<div class="map" id="map"></div>
+		<div class="transit" id="transit"></div>
+		<div class="store" id="store">
+			<div class="storebox">
+				<img src="store.jpg" width="100%" alt="">
+				<p class="storeName"></p>
+				<p class="route"><img src="loading.gif" width="24" alt=""></p>
+				<p class="addr"></p>
+				<div class="btns">
+					<span class="btn-route">路线导航</span>
+					<a class="btn-tel" href="#">拨打电话</a>
+				</div>
+			</div>
+
+		</div>
+		<div class="selectorbox">
+			<div class="box-top"></div>
+			<div class="content loading" id="content">
+				<img src="loading.gif" width="32" style="margin-top:60px;" alt="">
+				<p>离您最近的星巴克店</p>
+				<select name="" id="selectBranchStore"></select>
+				<p style="text-align:center;"><span class="btn-entry">进入小店</span></p>
+			</div>
+		</div>
+		<div class="btn-reSelect" id="btn-reSelect">重新选择</div>
+	</div>
+
+	
+	<script src="../../js/appscommon.js"></script>
+	<script src="http://api.map.baidu.com/api?v=2.0&ak=ca8Ak7KA2PLWFBmqrbK3KCSG"></script>
+	<script type="text/javascript">
+		var ev={
+			get:function(e){return document.querySelector(e);},
+			getAll:function(e){return document.querySelectorAll(e);},
+			getObj:function(){
+				ev.obj={
+					slbox:ev.get('.selectorbox'),
+					slboxctn:ev.get('#content'),
+					sl:ev.get('#selectBranchStore'),
+					slbtn:ev.get('.btn-entry'),
+					reslbtn:ev.get('#btn-reSelect'),
+					store:ev.get('#store')
+				}
+			},
+			pos:[],
+			changebox:function(id){
+				switch(id){
+					case 0://全部关闭
+						ev.obj.slbox.style.display='none';
+						ev.obj.slbox.className='selectorbox';
+						ev.obj.store.className='store';
+						ev.obj.reslbtn.className='btn-reSelect show';
+						ev.get('.route').innerHTML='<img src="loading.gif" width="24" alt="">';
+						break;
+					case 1://打开第一个弹框
+						ev.obj.slbox.style.display='block';
+						ev.obj.slbox.className='selectorbox animation';
+						ev.obj.store.className='store';
+						ev.obj.reslbtn.className='btn-reSelect';
+						break;
+					case 2://打开第二个弹框
+						ev.obj.slbox.style.display='none';
+						ev.obj.slbox.className='selectorbox';
+						ev.obj.store.className='store show';
+						ev.obj.reslbtn.className='btn-reSelect';
+						break;
+				}
+			},
+			setBranchStore:function(r){
+				var html='',item;
+				for (var i = 0; i < r.getCurrentNumPois(); i++) {
+					item=r.getPoi(i);
+					ev.pos[i]=item;
+					html+='<option value="'+i+'">'+item.title+':'+item.address+'</option>'
+				};
+				ev.obj.slboxctn.className='content';
+				ev.obj.sl.innerHTML=html;
+			},
+			getStoreInfo:function(p){
+				ev.changebox(2);
+
+				ev.get('.addr').innerHTML=p.address;
+				ev.get('.storeName').innerHTML=p.title;
+				if (p.phoneNumber) {
+					ev.get('.btn-tel').href='tel:'+p.phoneNumber.split('-').join('');
+				}else{
+					ev.get('.btn-tel').style.display='none';
+				}
+				/*var str='';
+				for(var x in p){
+					str+=x+':'+p[x]+'\n';
+				}
+				alert(str)*/
+			},
+			getTransit:function(p){
+
+				ev.walking.search(ev.curPoint,p.point);
+			},
+			geo:function(result){
+					var map=ev.map = new BMap.Map("map");				// 创建Map实例
+					map.addControl(new BMap.NavigationControl());		//添加默认缩放平移控件
+					map.enableScrollWheelZoom();						//启用滚轮放大缩小，默认禁用
+					map.enableContinuousZoom();							//启用地图惯性拖拽，默认禁用
+
+					map.addEventListener("tilesloaded",function(){
+						
+					});
+
+
+					var point=ev.curPoint=result.point;
+					map.centerAndZoom(point, 15);						// 初始化地图,设置中心点坐标和地图级别。
+					var marker = new BMap.Marker(point);				// 创建标注
+					map.addOverlay(marker);								//将标注添加到地图中
+
+					//视图范围内搜索目标
+					var local=ev.local = new BMap.LocalSearch(map, {
+						// renderOptions:{map: map, autoViewport:false},
+						onSearchComplete:function(r){
+							if (local.getStatus() == BMAP_STATUS_SUCCESS){
+								setTimeout(function(){
+									ev.setBranchStore(r)
+								},600);
+								
+							}
+						}
+					});
+					local.searchInBounds("星巴克", map.getBounds());
+
+					//公交
+					var transit=ev.transit=new BMap.TransitRoute(map, {
+						renderOptions: {map: map, autoViewport:false,panel:'transit'}
+					});
+					//步行
+					var walking=ev.walking=new BMap.WalkingRoute(map, {
+						// renderOptions: {map: map, autoViewport: true, panel: "transit"}
+					});
+					ev.walking.setSearchCompleteCallback(function(results){
+						// alert(ev.walking.getStatus() +':'+ BMAP_STATUS_SUCCESS)
+						if (ev.walking.getStatus() == BMAP_STATUS_SUCCESS){
+
+							var firstPlan = results.getPlan(0);
+							// 绘制步行线路
+							var path=ev.path=firstPlan.getRoute(0).getPath();
+
+							ev.map.addOverlay(new BMap.Polyline(path, {lineColor: "red"}));
+							ev.get('.route').innerHTML='步行'+firstPlan.getDistance()+','+firstPlan.getDuration();
+							draw()
+							/*var str='';
+							for (var x in firstPlan) {
+								str+=x+':'+firstPlan[x]+'\n';
+							};
+							alert(str);*/
+
+						}
+					});
+					function draw(){
+						map.clearOverlays();
+						var marker = new BMap.Marker(point);
+						map.addOverlay(marker);
+						if(ev.path){
+							ev.map.addOverlay(new BMap.Polyline(ev.path, {lineColor: "red"}));
+						}
+					}
+					map.addEventListener("dragend",function(){
+					});
+					map.addEventListener("zoomend",draw);
+
+					ev.get('.btn-route').addEventListener('click',function(e){
+						ev.changebox(0);
+					},false);
+					ev.obj.reslbtn.addEventListener('click',function(e){
+						ev.changebox(1);
+					},false);
+					ev.obj.slbtn.addEventListener('click',function(e){
+						var point=ev.pos[ev.obj.sl.value];
+						ev.getStoreInfo(point);
+						ev.getTransit(point)
+					},false);
+			}
+		}
+		window.onload = function() {
+			if (navigator.geolocation) {
+				ev.getObj();
+
+				var geolocation = new BMap.Geolocation();
+				geolocation.getCurrentPosition(function(r){
+					if(this.getStatus() == BMAP_STATUS_SUCCESS){
+						ev.geo(r);
+					}else {
+
+						ev.obj.slboxctn.className='content';
+						ev.obj.slbox.innerHTML='<p style="padding:90px 30px 0;color:#666;text-indent:2em;">定位失败，请检查您的定位服务是否开启，并授权予该浏览器</p>';
+					}
+				},{enableHighAccuracy: true})
+				ev.changebox(1)
+				// ev.obj.slbox.className='selectorbox animation';
+			}else{
+				ev.obj.slboxctn.className='content';
+				ev.obj.slbox.innerHTML='<p style="padding:90px 30px 0;color:#666;text-indent:2em;">您的设备不支持定位</p>';
+				ev.changebox(1);
+				//ev.obj.slbox.className='selectorbox animation';
+			};
+		};
+	</script>
+</body>
+</html>

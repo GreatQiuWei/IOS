@@ -1,0 +1,144 @@
+body,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote,th,td{ margin:0;padding:0; }
+html{ width:100%; height:100%; font-size:10px; -webkit-backface-visibility: hidden; line-height:1; }
+body{ width:100%; height:100%; font-family:"Microsoft YaHei", Arial, Helvetica, sans-serif; background-color:#fff; -webkit-backface-visibility: hidden; -webkit-tap-highlight-color: rgba(0,0,0,0); }
+table{ border-collapse:collapse; border-spacing:0; }
+img{ border:0; vertical-align: top; }
+p,span{ word-wrap:break-word; white-space:normal; word-break:break-all; }
+ol,ul{ list-style:none; }
+.bold{ font-weight:bold; }
+.center{ text-align:center; }
+.clear{ clear:both; }
+.ofh{ overflow:hidden; }
+.pic_mid{ vertical-align: middle; margin-top: -0.3rem; }
+.f_l{ float:left; }
+.f_r{ float:right; }
+.tdn{ text-decoration: none; }
+.transition{ -webkit-transition:all 0.3s linear; }
+.page{ width: 100%; height: 100%; }
+audio{ width: 0; height: 0; display: none; }
+section{ overflow: hidden; }
+#LandscapeNotice{ width:100%; height:100%; position:fixed; z-index:999; left:0; top:0; background-color:#fff; background-image:url(LandscapeNotice.png); background-position:center center; background-repeat:no-repeat; background-size:auto 50%; display:none; }
+
+@media screen and (Orientation: Landscape){
+	html,body{ width:100%; height:100%; overflow:hidden; background-color: #fff; }
+	#LandscapeNotice{ display:block; }	
+	#pageIndex{ display:none; }	
+}
+
+#pageIndex{ background-color:#fff; display: none; background-image:-webkit-radial-gradient(center center, circle farthest-corner, rgba(8, 87, 159, 0.7) 0%, rgba(8, 87, 159, 1) 100%); }
+#pageIndex .gameArea{ width: 100%; height: 100%; position: relative; }
+#pageIndex .gameArea .defaultBg{ width: 100%; height: 100%; position: relative; background-color: #000; }
+#pageIndex .gameArea .skyBg{ width: 100%; height: 268px; position: absolute; left: 0; top: 0; background-image: url(../images/sky_bg.png); background-repeat: repeat-x; background-position: 0 0; background-size: auto 100%; }
+#pageIndex .gameArea .houseBg{ width: 100%; height: 192px; position: absolute; left: 0; top: 76px; background-image: url(../images/house.png); background-repeat: repeat-x; background-position: 0 0; background-size: auto 100%; }
+#pageIndex .gameArea .houseBg.act{ -webkit-animation: house 12s linear infinite; }
+#pageIndex .gameArea .roadBg{ width: 100%; height: 100px; position: absolute; left: 0; top: 268px; background-image: url(../images/road_bg.png); background-repeat: repeat-x; background-position: 0 0; background-size: auto 100%; }
+
+#pageIndex .gameArea .nissan{ width: 224px; height: 160px; position: absolute; left: 720px; top: 135px; background-image: url(../images/nissan.png); background-repeat: no-repeat; background-position: 0 0; background-size: auto 100%; }
+
+#pageIndex .gameArea .varia1{ width: 150px; height: 43px; position: absolute; left: 360px; top: 251px; background-image: url(../images/varia3.png); background-repeat: no-repeat; background-position: 0 0; background-size: auto 100%; }
+#pageIndex .gameArea .varia2{ width: 150px; height: 43px; position: absolute; left: 540px; top: 251px; background-image: url(../images/varia2.png); background-repeat: no-repeat; background-position: 0 0; background-size: auto 100%; }
+#pageIndex .gameArea .varia3{ width: 150px; height: 43px; position: absolute; left: 900px; top: 251px; background-image: url(../images/varia1.png); background-repeat: no-repeat; background-position: 0 0; background-size: auto 100%; }
+
+#pageIndex .gameArea .light1{ width: 128px; height: 192px; position: absolute; left: 360px; top: 118px; background-image: url(../images/light1.png); background-repeat: no-repeat; background-position: 0 0; background-size: auto 100%; -webkit-transform:translate3d(360px,0,0); }
+#pageIndex .gameArea .light1.on{ background-position: -128px 0; }
+#pageIndex .gameArea .light2{ width: 128px; height: 192px; position: absolute; left: 360px; top: 118px; background-image: url(../images/light1.png); background-repeat: no-repeat; background-position: 0 0; background-size: auto 100%; -webkit-transform:translate3d(360px,0,0); }
+#pageIndex .gameArea .light2.on{ background-position: -128px 0; }
+#pageIndex .gameArea .carBody{ width: 192px; height: 96px; position: absolute; left: 50%; top: 250px; margin-left: -96px; background-image: url(../images/car_body.png); background-repeat: no-repeat; background-position: 0 0; background-size: auto 100%; }
+#pageIndex .gameArea.act .carBody{ -webkit-animation: car_body 0.8s steps(8, end) infinite; }
+#pageIndex .gameArea .carWheel{ width: 192px; height: 96px; position: absolute; left: 50%; top: 250px; margin-left: -96px; background-image: url(../images/car_wheel.png); background-repeat: no-repeat; background-position: 0 0; background-size: auto 100%; }
+#pageIndex .gameArea.act .carWheel{ -webkit-animation: car_wheel 0.2s steps(4, end) infinite; }
+#pageIndex .gameArea.act .carWheel.act{ -webkit-animation: car_wheel_fire 0.2s steps(4, end) infinite; }
+#pageIndex .gameArea .points{ width: 100%; text-align: center; position: absolute; left: 0; top: 50px; color:#fff; color: #888; font-size: 16px; }
+#pageIndex .gameArea .tips{ width: 100%; text-align: center; position: absolute; left: 0; top: 70px; color:#fff; color: #f10000; font-size: 16px; opacity: 0; }
+#pageIndex .gameArea .tips.act{ -webkit-animation: tips 0.3s linear 0s 1; -webkit-animation-fill-mode: forwards; }
+#pageIndex .gameArea .gameStartMask{ position: absolute; left: 0; top: 0; overflow: hidden; width: 100%; height: 100%; }
+#pageIndex .gameArea .gameStartMask>.tip{ position: absolute; left: 0; top:20px; text-align: center; color:#fff; width: 100%; color: #888; font-size: 16px; }
+#pageIndex .gameArea .gameStartMask>.tip.opacity{ -webkit-animation: opacity 2s linear 0s infinite; -webkit-animation-fill-mode: forwards; }
+
+@-webkit-keyframes tips{
+	0% { -webkit-transform:translate3d(0,10px,0); opacity: 1; }
+	99% { opacity: 1; }
+	100% { -webkit-transform:translate3d(0,0,0); opacity: 0; }
+}
+
+@-webkit-keyframes car_body{
+	0% { background-position: 0 0; -webkit-transform:translate3d(0,-2px,0); }
+	50% { -webkit-transform:translate3d(0,2px,0); }
+	100% { background-position: -1536px 0; -webkit-transform:translate3d(0,-2px,0); }
+}
+@-webkit-keyframes car_wheel{
+	0% { background-position: 0 0; }
+	100% { background-position: -768px 0; }
+}
+@-webkit-keyframes car_wheel_fire{
+	0% { background-position: -768px 0; }
+	100% { background-position: -1536px 0; }
+}
+
+#message{ width: 100%; height: 100%; position: fixed; left: 0; top: 0; z-index: 9; display: none; }
+#message .bg{ width: 100%; height: 100%; background: rgba(0,0,0,0.8); position: absolute; left: 0; top: 0; }
+#message .start{ width: 320px; position: absolute; left: 50%; margin-left: -160px; top: 10%; }
+#message .start.pop{ -webkit-animation: pop 0.3s linear 0s 1; -webkit-animation-fill-mode: forwards; }
+#message .panel{ width: 230px; position: absolute; left: 50%; margin-left: -115px; top: 30%; background-color: #fff; border-radius: 8px; opacity: 0; }
+#message .panel.pop{ -webkit-animation: pop 0.3s linear 0s 1; -webkit-animation-fill-mode: forwards; }
+#message .panel .text{ padding: 20px 15px; line-height: 1.5; font-size: 18px; color: #414141; text-align: center; }
+#message .panel .btn{ height: 44px; line-height: 44px; font-size: 24px; color: #fff; text-align: center; border-radius: 0 0 6px 6px; display: none; }
+/*#message .panel .close{ width: 44px; height: 44px; position: absolute; left: 50%; top: -22px; margin-left: -22px; background: url(../images/close_btn.png) no-repeat 0 0 ; background-size: 100% 100%; }*/
+#message.win .panel .btn{ display: block; }
+@-webkit-keyframes opacity{
+	0% { opacity: 0; }
+	50% { opacity: 1; }
+	100% { opacity: 0; }
+}
+@-webkit-keyframes pop{
+	0% { opacity: 0; -webkit-transform:scale(0); }
+	80% { -webkit-transform:scale(1.2); }
+	100% { opacity: 1; -webkit-transform:scale(1); }
+}
+@-webkit-keyframes pops{
+	0% { -webkit-transform:scale(1) translate3d(0,0,0); }
+	50% { -webkit-transform:scale(0.92,1.08) translate3d(0,-2px,0); }
+	100% { -webkit-transform:scale(1) translate3d(0,0,0); }
+}
+
+#pageInfo{ width: 100%; height: 100%; display: none; }
+#pageInfo section{ width: 100%; height: 100%; }
+#pageInfo section>header{ width: 100%; padding: 25px 15px; line-height: 1.5; color: #fff; /*background-repeat: repeat; background-size: 49px 49px; background-image: url(../images/bg2.png);*/ }
+#pageInfo section>header>h1{ font-size: 30px; }
+#pageInfo section>header>h2{ font-size: 14px; }
+#pageInfo section>header>h2>span{  }
+#pageInfo section .arrow{ margin-left: 29px; width: 28px; height: 14px; /*background-repeat: repeat; background-size: 49px 49px; background-image: url(../images/bg2.png);*/ position: relative; }
+#pageInfo section .arrow:before{ content: ''; width: 0; height: 0; border-left: 14px solid #fff; border-top: 14px solid transparent; position: absolute; left: 0; top: 0; }
+#pageInfo section .arrow:after{ content: ''; width: 0; height: 0; border-right: 14px solid #fff; border-top: 14px solid transparent; position: absolute; right: 0; top: 0; }
+#pageInfo section .form{  }
+#pageInfo section .form .line{ padding-left: 20px; font-size: 14px; height: 30px; margin: 10px 0; }
+#pageInfo section .form .line>input{ height: 28px; border: 1px solid #bcbcbc; padding: 0 10px; color: #bcbcbc; }
+#pageInfo section .form .line>input.name{ width: 60px; }
+#pageInfo section .form .line>input.phone{ width: 120px; }
+#pageInfo section .form .line .sex{ margin-left: 10px; }
+#pageInfo section .form .line .sex>i{ display: inline-block; margin-left: 5px; width: 22px; height: 22px; vertical-align: middle; background: url(../images/sex.png) no-repeat 0 0; background-size: auto 22px; }
+#pageInfo section .form .line .sex.act>i{ background-position: -22px 0; }
+#pageInfo section .sentBtn{ position: fixed; left: 0; bottom: 0; width: 100%; height: 44px; line-height: 44px; font-size: 24px; color: #fff; text-align: center; /*background-repeat: repeat; background-size: 49px 49px; background-image: url(../images/bg2.png);*/ }
+
+#pageList{ display: none; }
+
+#loading{ width: 100%; height: 100%; position: relative; }
+#loading>div{ width: 100%; height: 2rem; line-height: 2rem; position: absolute; left: 0; top: 50%; margin-top: -1rem; }
+
+.winner-title{ width: 100%; height: 44px; line-height: 44px; font-size: 24px; color: #fff; text-align: center; position: relative; }
+.winner-list>li{ padding: 10px 20px; font-size: 12px; }
+.winner-list>li:nth-of-type(odd){ background-color: #eaf3fb; } /*even*/
+.winner-list>li .phone{ padding: 0 10px; }
+
+.lineBg-orange{
+	background-color: #e15f24;
+	background-image: repeating-linear-gradient(-45deg, transparent, transparent 10px, #e46328 10px, #e46328 20px);
+}
+.lineBg-blue{
+	background-color: #2972c0;
+	background-image: repeating-linear-gradient(-45deg, transparent, transparent 10px, #2c76c4 10px, #2c76c4 20px);
+}
+.lineBg-red{
+	background-color: #cf1c1e;
+	background-image: repeating-linear-gradient(-45deg, transparent, transparent 10px, #d3242b 10px, #d3242b 20px);
+}

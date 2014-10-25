@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6245" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment defaultVersion="1536" identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="O2OQRCodeView">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="QR_BIG.png" translatesAutoresizingMaskIntoConstraints="NO" id="Mgy-93-4xR">
+                    <rect key="frame" x="200" y="200" width="200" height="200"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="200" id="cNF-yD-0LV"/>
+                        <constraint firstAttribute="width" constant="200" id="mdl-Xp-iul"/>
+                    </constraints>
+                    <variation key="widthClass=compact">
+                        <mask key="constraints">
+                            <include reference="cNF-yD-0LV"/>
+                            <include reference="mdl-Xp-iul"/>
+                        </mask>
+                    </variation>
+                </imageView>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="centerY" secondItem="Mgy-93-4xR" secondAttribute="centerY" id="U4i-Tn-8uQ"/>
+                <constraint firstAttribute="centerX" secondItem="Mgy-93-4xR" secondAttribute="centerX" id="pJI-IE-5jc"/>
+            </constraints>
+            <variation key="widthClass=compact">
+                <mask key="subviews">
+                    <include reference="Mgy-93-4xR"/>
+                </mask>
+                <mask key="constraints">
+                    <include reference="U4i-Tn-8uQ"/>
+                    <include reference="pJI-IE-5jc"/>
+                </mask>
+            </variation>
+            <connections>
+                <outlet property="centerView" destination="Mgy-93-4xR" id="fhA-bG-811"/>
+            </connections>
+        </view>
+    </objects>
+    <resources>
+        <image name="QR_BIG.png" width="184" height="184"/>
+    </resources>
+</document>

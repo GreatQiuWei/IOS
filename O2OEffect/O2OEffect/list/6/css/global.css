@@ -1,0 +1,81 @@
+body,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote,th,td{ margin:0;padding:0; }
+html{ width:100%; height:100%; font-size:10px; -webkit-backface-visibility: hidden; line-height:1; }
+body{ width:100%; height:100%; font-family:"Microsoft YaHei", Arial, Helvetica, sans-serif; background-color:#fff; -webkit-backface-visibility: hidden; -webkit-tap-highlight-color: rgba(0,0,0,0); }
+table{ border-collapse:collapse; border-spacing:0; }
+img{ border:0; vertical-align: top; }
+p,span{ word-wrap:break-word; white-space:normal; word-break:break-all; }
+ol,ul{ list-style:none; }
+.bold{ font-weight:bold; }
+.center{ text-align:center; }
+.clear{ clear:both; }
+.ofh{ overflow:hidden; }
+.pic_mid{ vertical-align: middle; margin-top: -0.3rem; }
+.f_l{ float:left; }
+.f_r{ float:right; }
+.tdn{ text-decoration: none; }
+#LandscapeNotice{ width:100%; height:100%; position:fixed; z-index:999; left:0; top:0; background-color:#fff; background-image:url(LandscapeNotice.png); background-position:center center; background-repeat:no-repeat; background-size:auto 50%; display:none; }
+
+@media screen and (Orientation: Landscape){
+	html,body{ width:100%; height:100%; overflow:hidden; background-color: #fff; }
+	#LandscapeNotice{ display:block; }	
+	#pageIndex{ display:none; }	
+}
+
+#pageIndex{ background-color:#fff; display: none; }
+.bgc1{ background-color: #ffd776; }/*ffb401*/
+.bgi1{ background-image: url(../images/bg.png); }
+.bgi2{ background-image: url(../images/btn.png); }
+.bgi3{ background-image: url(../images/text.png); }
+.gift1{ background-image: url(../images/gift1.png); }
+.gift2{ background-image: url(../images/gift2.png); }
+.gift3{ background-image: url(../images/gift3.png); }
+.gift4{ background-image: url(../images/gift4.png); }
+.down{ background-image: url(../images/btn_down.png); }
+/*.transition{ transition:all 0.1s linear; -moz-transition:all 0.1s linear; -webkit-transition:all 0.1s linear; -o-transition:all 0.1s linear; }*/
+section{ overflow: hidden; }
+section article{ background-repeat: repeat; background-size: 49px 49px; }
+.item{ float: left; }
+.item .content{ width: 100%; height: 100%; background-repeat: no-repeat; background-size: auto 100%; background-position: 0 0; position: relative; }
+.item .content .mask{ width: 100%; height: 100%; position: absolute; left: 0; top: 0; border: 4px solid #ea5c5d; /*dd7e22*/ display: -webkit-box; -webkit-box-sizing:border-box; opacity: 0;  }
+.item.act .content .mask{ opacity: 1; /*background-color: rgba(255,239,73,0.6);*/ background-color: rgba(234,92,93,0.2); }
+.winner-title{ width: 100%; height: 44px; line-height: 44px; font-size: 24px; color: #fff; text-align: center; background-repeat: repeat; background-size: 49px 49px; background-image: url(../images/bg2.png); }
+.winner-title img{ margin-left: 10px; }
+.winner-list>li{ padding: 10px 20px; font-size: 12px; }
+.winner-list>li:nth-of-type(odd){ background-color: #fbf6e9; } /*even*/
+.winner-list>li .phone{ padding: 0 10px; }
+
+#message{ width: 100%; height: 100%; position: fixed; left: 0; top: 0; z-index: 9; display: none; }
+#message .bg{ width: 100%; height: 100%; background: rgba(0,0,0,0.8); position: absolute; left: 0; top: 0; }
+#message .panel{ width: 230px; position: absolute; left: 50%; margin-left: -115px; top: 30%; background-color: #fff; border-radius: 8px; opacity: 0; }
+#message .panel.pop{ -webkit-animation: pop 0.3s linear 0s 1; -webkit-animation-fill-mode: forwards; }
+#message .panel .text{ padding: 20px 15px; line-height: 1.5; font-size: 18px; color: #414141; text-align: center; }
+#message .panel .btn{ height: 44px; line-height: 44px; font-size: 24px; color: #fff; text-align: center; background-repeat: repeat; background-size: 49px 49px; background-image: url(../images/bg2.png); border-radius: 0 0 6px 6px; display: none; }
+#message .panel .close{ width: 44px; height: 44px; position: absolute; left: 50%; top: -22px; margin-left: -22px; background: url(../images/close_btn.png) no-repeat 0 0 ; background-size: 100% 100%; }
+#message.win .panel .btn{ display: block; }
+@-webkit-keyframes pop{
+	0% { opacity: 0; -webkit-transform:scale(0) }
+	80% { -webkit-transform:scale(1.2); }
+	100% { opacity: 1; -webkit-transform:scale(1); }
+}
+
+#pageInfo{ width: 100%; height: 100%; display: none; }
+#pageInfo section{ width: 100%; height: 100%; }
+#pageInfo section>header{ width: 100%; padding: 25px 15px; line-height: 1.5; color: #fff; background-repeat: repeat; background-size: 49px 49px; background-image: url(../images/bg2.png); }
+#pageInfo section>header>h1{ font-size: 30px; }
+#pageInfo section>header>h2{ font-size: 14px; }
+#pageInfo section>header>h2>span{  }
+#pageInfo section .arrow{ margin-left: 29px; width: 28px; height: 14px; background-repeat: repeat; background-size: 49px 49px; background-image: url(../images/bg2.png); position: relative; }
+#pageInfo section .arrow:before{ content: ''; width: 0; height: 0; border-left: 14px solid #fff; border-top: 14px solid transparent; position: absolute; left: 0; top: 0; }
+#pageInfo section .arrow:after{ content: ''; width: 0; height: 0; border-right: 14px solid #fff; border-top: 14px solid transparent; position: absolute; right: 0; top: 0; }
+#pageInfo section .form{  }
+#pageInfo section .form .line{ padding-left: 20px; font-size: 14px; height: 30px; margin: 10px 0; }
+#pageInfo section .form .line>input{ height: 28px; border: 1px solid #bcbcbc; padding: 0 10px; color: #bcbcbc; }
+#pageInfo section .form .line>input.name{ width: 60px; }
+#pageInfo section .form .line>input.phone{ width: 120px; }
+#pageInfo section .form .line .sex{ margin-left: 10px; }
+#pageInfo section .form .line .sex>i{ display: inline-block; margin-left: 5px; width: 22px; height: 22px; vertical-align: middle; background: url(../images/sex.png) no-repeat 0 0; background-size: auto 22px; }
+#pageInfo section .form .line .sex.act>i{ background-position: -22px 0; }
+#pageInfo section .sentBtn{ position: fixed; left: 0; bottom: 0; width: 100%; height: 44px; line-height: 44px; font-size: 24px; color: #fff; text-align: center; background-repeat: repeat; background-size: 49px 49px; background-image: url(../images/bg2.png); }
+
+#loading{ width: 100%; height: 100%; position: relative; }
+#loading>div{ width: 100%; height: 2rem; line-height: 2rem; position: absolute; left: 0; top: 50%; margin-top: -1rem; }

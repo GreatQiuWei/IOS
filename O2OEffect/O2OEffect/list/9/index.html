@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+	<title>我有车APP推广</title>
+	<style>
+	*{margin:0;padding:0;}
+	body{background:#FFF;}
+	.wrap{width:100%;overflow:hidden;}
+	img{vertical-align:top;}
+	.pagesbox{width:300%;background:#FFF;}
+	.pagesbox:after{content:'';display:block;clear:both;height:0;overflow:hidden;}
+	.pagesbox .pages{float:left;width:33.33%;background:#FFF;}
+	.pagesbox .pages img{width:100%;pointer-events:none;}
+
+	.title_tab{width:100%;position:relative;}
+	.title_tab p{width:50%;position:absolute;top:0;right:0;font-size:1.3rem;line-height:2.3rem;color:#333;}
+	.title_tab p i,
+	.title_tab p span{padding:0.2rem 0;display:inline-block;margin-top:0.2rem;font-style:normal;vertical-align:middle;}
+	.title_tab p span{padding:0.2rem 0.9rem;}
+	.title_tab p span.current{background:#FF1B1B;color:#FFF;}
+	.imgs_03{display:none;}
+	.imgs_03.current{display:block;}
+
+	
+	.dotted{position:fixed;bottom:5.4rem;left:0;right:0;text-align:center;}
+	.dotted i{display:inline-block;margin:0 0.5rem;width:1.2rem;height:1.2rem;vertical-align:middle;background:#A7A7A7;border-radius:0.6rem;-webkit-transition:all 0.2s;transition:all 0.2s;-webkit-transform:scale(0.8);}
+	.dotted i.current{background:#FF1B1B;-webkit-transform:scale(1);}
+
+
+	.tel{position:fixed;bottom:8rem;right:0;width:15.6%;}
+	.tel img{width:100%;}
+	.btnbar{position:fixed;bottom:0;left:0;right:0;padding:0.6rem 0;background:rgba(0,0,0,0.9);text-align:center;font-size:0;}
+	.btnbar>span,
+	.btnbar>a{display:inline-block;color:#FFF;vertical-align:middle;font-size:1.6rem;}
+	.btnbar>a{width:32%;}
+	.btnbar>a:nth-child(2){margin-right:1rem;}
+	.btnbar>a>img{width:100%;}
+	
+
+
+@media screen and (min-width:1024px){
+	html{font-size:205%;}
+}
+@media screen and (max-width:1024px){
+	html{font-size:205%;}
+}
+@media screen and (max-width:768px){
+	html{font-size:100%;}
+}
+@media screen and (max-width:480px){
+	html{font-size:92.5%;}
+}
+@media screen and (max-width:360px){
+	html{font-size:75.0%;}
+}
+@media screen and (max-width:320px){
+	html{font-size:62.5%;}
+}
+@media screen and (max-width:300px){
+	html{font-size:60%;}
+}
+@media screen and (max-width:280px){
+	html{font-size:55%;}
+}
+	</style>
+</head>
+<body>
+	<div class="wrap" id="wrap">
+		<div class="pagesbox" id="pagesbox">
+			<div class="pages">
+				<img src="images/header.png" alt="">
+				<img src="images/01.png" alt="">
+			</div>
+			<div class="pages" style="background:url(images/02_btm.png) no-repeat 0 bottom;background-size:100% auto;">
+				<img src="images/header.png" alt="">
+				<img src="images/02.png" alt="">
+				<img src="images/02_btm_placeholder.png" alt="">
+			</div>
+			<div class="pages">
+				<div class="title_tab">
+					<img src="images/03_title.png" alt="">
+					<p><span class="current" tid="imgs_03_sz">深圳</span><span tid="imgs_03_bj">北京</span><span tid="imgs_03_gz">广州</span></p>
+				</div>
+				<img src="images/03_gz.png" class="imgs_03" id="imgs_03_gz" alt="">
+				<img src="images/03_sz.png" class="imgs_03 current" id="imgs_03_sz" alt="">
+				<img src="images/03_bj.png" class="imgs_03" id="imgs_03_bj" alt="">
+			</div>
+		</div>
+	</div>
+	<div class="dotted">
+		<i class="current"></i><i></i><i></i>
+	</div>
+	<a href="tel:4007000711" class="tel" id="tel"><img src="images/tel.png" alt=""></a>
+	<div class="btnbar">
+		<span>我要用车：</span>
+		<a href="https://itunes.apple.com/cn/app/wo-you-che-zui-tie-xin-da/id878556862?mt=8"><img src="images/btn_ios.png" alt=""></a>
+		<a href="http://www.ihavecar.com/uploadDest/app/IHaveCar_1.0.8_20140628_1.apk"><img src="images/btn_android.png" alt=""></a>
+	</div>
+
+	<script>
+	var getE=function(id,all){
+		return all?document.querySelectorAll(id):document.querySelector(id);
+	}
+	function init(){
+		var pagesbox=getE('#pagesbox'),
+			wrap=getE('#wrap');
+		var isTouch=('ontouchstart' in window);
+		var _event={
+			'start':isTouch?"touchstart":"mousedown",
+			'move':isTouch?"touchmove":"mousemove",
+			'end':isTouch?"touchend":"mouseup"
+		}
+		var dragData={
+			point:[],
+			time:[],
+			index:0,
+			distance:0,
+			_distance:0,
+			_vendor:(/webkit/i).test(navigator.appVersion) ? 'webkit' :
+				(/firefox/i).test(navigator.userAgent) ? 'Moz' :
+				(/trident/i).test(navigator.userAgent) ? 'ms' :
+				'opera' in window ? 'O' : '',
+			duration:function(t){
+				pagesbox.style[this._vendor+'TransitionDuration']=t+"s";
+			},
+			translate:function(x){
+				pagesbox.style[this._vendor+'Transform']="translate3d("+x+"px,0,0)";
+			},
+			getRemain:function(x,t){ return (x/t)*0.13; },
+			reset:function(){
+				this['extent_wrap']=wrap['offsetWidth'];
+				this['extent_list']=pagesbox['offsetWidth'];
+			},
+			setCur:function(){
+				var item=getE('.dotted').querySelectorAll('i');
+				for (var i = 0; i < item.length; i++) {
+					item[i].className=i==Math.abs(this['index'])?'current':'';
+				};
+			},
+			starting:false
+		}
+		var initHeight=function(){
+			wrap.style['height']=pagesbox.style['height']=window.innerHeight;
+			var pages=pagesbox.querySelectorAll('.pages');
+			var x=window.innerHeight/window.innerWidth>=4/3;
+			for (var i = 0; i < pages.length; i++) {
+				pages[i].style['width']=window.innerWidth+'px';
+				if (x) {
+					pages[i].style['height']=window.innerHeight+'px';
+				}else{
+					pages[i].style['height']='auto';
+				};
+			};
+		}
+
+		pagesbox.addEventListener(_event['start'],function(e){
+			dragData['starting']=true;
+			var _e = isTouch ? e.touches[0] : e;
+			dragData['point']=[_e["pageX"]];
+			dragData['pointY']=[_e["pageY"]];
+			dragData['time']=[new Date()];
+			dragData['_distance']=dragData['distance'];
+			dragData['reset']();
+			dragData['duration'](0);
+		},false);
+		document.documentElement.addEventListener(_event['move'],function(e){
+			if (dragData['starting']) {
+				var _e = isTouch ? e.touches[0] : e;
+					dragData['point'][dragData['point'].length]=_e["pageX"];
+					dragData['pointY'][dragData['pointY'].length]=_e["pageY"];
+
+				if (Math.abs(dragData["pointY"][1]-dragData['pointY'][0])<=Math.abs(dragData["point"][1]-dragData['point'][0])) {
+					dragData['time'][dragData['time'].length]=new Date();
+					dragData['distance']=dragData['_distance']+dragData['point'][dragData['point'].length-1]-dragData['point'][0];
+					dragData['translate'](dragData['distance']);
+					e.preventDefault();
+					e.stopPropagation();
+					return false;
+				}else{
+					dragData['starting']=false;
+				};
+			};
+		},false);
+		document.documentElement.addEventListener(_event['end'],function(){
+			if (dragData['starting']&&dragData['point'].length>2) {
+				var remain=dragData['getRemain'](dragData['point'][dragData['time'].length-1]-dragData['point'][dragData['point'].length-2],(dragData['time'][dragData['time'].length-1]-dragData['time'][dragData['time'].length-2])/1000);
+				dragData['duration'](0.3);
+				if (dragData['distance']+remain>0||dragData['extent_list']<=dragData['extent_wrap']) {
+					dragData['index']=0;
+					dragData['distance']=0;
+				}else if (dragData['extent_list']+dragData['distance']+remain<dragData['extent_wrap']) {
+					dragData['index']=1-Math.round(dragData['extent_list']/dragData['extent_wrap']);
+					dragData['distance']=dragData['extent_wrap']-dragData['extent_list'];
+				}else{
+					var _dis=dragData['distance']+remain;
+					var index=0;
+					if(Math.abs(_dis%dragData['extent_wrap'])>=dragData['extent_wrap']/2){
+						index=(Math.round((_dis-_dis%dragData['extent_wrap'])/dragData['extent_wrap'])-1)
+					}else{
+						index=Math.round((_dis-_dis%dragData['extent_wrap'])/dragData['extent_wrap'])
+					}
+					dragData['index']=index;
+					dragData['distance']=index*dragData['extent_wrap'];
+				}
+				dragData['setCur']();
+				dragData['translate'](dragData['distance']);
+			}
+			dragData['starting']=false;
+		},false);
+		window.addEventListener('resize',function(){
+			setTimeout(function(){
+				dragData['reset']();
+				initHeight();
+				_dis=dragData['index']*dragData['extent_wrap'];
+				dragData['distance']=_dis;
+				dragData['translate'](dragData['distance']);
+			},300);
+		},false);
+		initHeight();
+
+
+
+
+
+		var tab_items=getE('.title_tab span',true);
+		var tab_imgs=getE('.imgs_03',true);
+		for (var i = 0; i < tab_items.length; i++) {
+			(function(i){ 
+				tab_items[i].addEventListener(_event['start'],function(e){
+					tab_items[0].className=tab_items[1].className=tab_items[2].className='';
+					this.className='current';
+					var id=this.getAttribute('tid');
+					tab_imgs[0].className=tab_imgs[1].className=tab_imgs[2].className='imgs_03';
+					getE('#'+id).className='imgs_03 current';
+					e.preventDefault();
+				},false)
+			})(i)
+		};
+
+
+	}
+
+	window.onload=init;
+
+	</script>
+</body>
+</html>

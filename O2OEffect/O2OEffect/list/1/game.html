@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+	<meta charset="utf-8">
+	<title>民生银行广州分行喊你当行长</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+	<link href="css/page.css" rel="stylesheet" type="text/css">
+	<link href="css/main.css" rel="stylesheet" type="text/css">
+	<link href="css/custom.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+	<i class="grey-shadow" id="grey-shadow"></i>
+	<div class="popupbox" id="tips-loading">
+		<i class="loading"></i>
+	</div>
+	<div class="popupbox" id="tips-levelup">
+		<div class="popup-header"><i class="title2"></i></div>
+		<div class="content">
+			<div class="text">
+				<p style="font-size:18px;">恭喜您晋升到</p>
+				<p style="font-size:30px;font-weight:bold;color:#FFF1B0" id="level">经理</p>
+				<p style="font-size:14px;font-weight:bold;">继续游戏成为<span id="level_next">支行行长</span>吧!</p>
+			</div>
+			<span class="btn btn-continue action_continue">继续游戏</span>
+			<a href="info.html" class="btm-link">了解手机银行详细介绍</a>
+		</div>
+	</div>
+	<div class="popupbox" id="tips-gameover">
+		<div class="tips-title">恭喜您被聘为<span class="level-title"></span></div>
+		<div class="avatar-box">
+			<span class="btn-prev"></span>
+			<span class="btn-next"></span>
+			<div class="avatar-big">
+				<span></span>
+			</div>
+		</div>
+		<div class="content">
+			<p class="pinshu"><span>兹聘请</span><input type="text" class="nickname" placeholder="请输入昵称"><span>任民生银行</span><span class="level-title">经理</span><span>，任期无限，即刻生效。</span></p>
+		</div>
+		<a class="btn btn-atten" href="#" id="btn-atten" style="display:none;"></a>
+		<span class="btn btn-share" id="btn-share" style="display:none;"></span>
+		<a href="info.html" class="btm-link">了解手机银行详细介绍</a>
+		<i class="btn-closer"></i>
+	</div>
+	<div class="popupbox" id="tips-again">
+		<div class="tips-title" style="font-size:18px;">还没当上行长？看看秘笈吧！</div>
+		<img src="css/tips-pad_miji.png" width="129" alt="" style="margin:20px auto 30px;">
+		<a class="btn btn-atten" href="#"></a>
+		<span class="btn btn-again" id="btn-again"></span>
+		<i class="btn-closer"></i>
+	</div>
+	<div class="popupbox" id="send-score">
+		<div class="tips-title">终于金榜题名了~</div>
+		<img src="css/tips-pad.png" width="129" alt="">
+		<div class="content">
+				<p style="line-height:1.4;font-weight:bold;">太牛掰了！你当前排名是<strong style="color:#B70505;" class="mysort">120</strong>名</p>
+				<p>赶快填写真实资料兑换民生银行大奖！</p>
+				<input type="text" id="fullname" class="inputtext" placeholder="请输入姓名">
+				<input type="text" id="telnum" maxlength="11" class="inputtext" placeholder="请输入手机号">
+			</div>
+			<span class="btn btn-send" id="btn-send"></span>
+			<span class="btn btn-resetform" id="btn-resetform"></span>
+		</div>
+		<i class="btn-closer"></i>
+	</div>
+	<div class="popupbox" id="sharefriend">
+	</div>
+
+
+
+
+
+	<div class="container" id="ctn" style="display:none;">
+		<div class="header">
+			<div class="header-top"></div>
+			<a class="restart-button" id="btn-popup-again">重新开始</a>
+			<div class="scores-container">
+				<div class="title-container"></div>
+				<div class="score-container"></div>
+				<div class="best-container"></div>
+			</div>
+		</div>
+
+
+		<div class="game-container">
+
+			<div class="grid-container">
+				<div class="grid-row">
+					<div class="grid-cell"></div>
+					<div class="grid-cell"></div>
+					<div class="grid-cell"></div>
+					<div class="grid-cell"></div>
+				</div>
+				<div class="grid-row">
+					<div class="grid-cell"></div>
+					<div class="grid-cell"></div>
+					<div class="grid-cell"></div>
+					<div class="grid-cell"></div>
+				</div>
+				<div class="grid-row">
+					<div class="grid-cell"></div>
+					<div class="grid-cell"></div>
+					<div class="grid-cell"></div>
+					<div class="grid-cell"></div>
+				</div>
+				<div class="grid-row">
+					<div class="grid-cell"></div>
+					<div class="grid-cell"></div>
+					<div class="grid-cell"></div>
+					<div class="grid-cell"></div>
+				</div>
+			</div>
+
+			<div class="tile-container">
+
+			</div>
+		</div>
+		<div class="footer">
+			<a href="list.html">查看每周排行榜</a>
+		</div>
+	</div>
+
+<script src="js/wx.js"></script>
+<script src="js/all.min.js"></script>
+</body>
+
+</html>
